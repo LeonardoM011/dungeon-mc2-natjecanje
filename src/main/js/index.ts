@@ -1,24 +1,60 @@
-import * as PIXI from "pixi.js";
+// Imports
+import * as PIXI from 'pixi.js';
 
-const app = new PIXI.Application({ backgroundColor: 0x1099bb });
-document.body.appendChild(app.view);
 
-// create a new Sprite from an image path
-const bunny = PIXI.Sprite.from('img/bunny.png');
+// Constants
 
-// center the sprite's anchor point
-bunny.anchor.set(0.5);
 
-// move the sprite to the center of the screen
-bunny.x = app.screen.width / 2;
-bunny.y = app.screen.height / 2;
+let windowWidth = window.innerWidth;
+let windowHeight = window.innerHeight;
 
-app.stage.addChild(bunny);
+const canvas = <HTMLCanvasElement> document.getElementById("mycanvas");
 
-// Listen for animate update
-app.ticker.add((delta) => {
-    // just for fun, let's rotate mr rabbit a little
-    // delta is 1 if running at 100% performance
-    // creates frame-independent transformation
-    bunny.position.x += 0.1 * delta;
+const renderer = new PIXI.Renderer({
+    view: canvas, 
+    width: windowWidth, 
+    height: windowHeight, 
+    backgroundColor: 0x1099bb, 
+    resolution: window.devicePixelRatio || 1,
+    autoDensity: true
 });
+
+window.addEventListener("resize", resizeEvent);
+
+function resizeEvent() {
+  windowWidth = window.innerWidth;
+  windowHeight = window.innerHeight;
+  renderer.resize(windowWidth, windowHeight);
+}
+
+const stage = new PIXI.Container();
+const loader = new PIXI.Loader();
+const ticker = new PIXI.Ticker();
+
+
+let grass : PIXI.Sprite[] = [];
+
+loader.add("img/Tilesets/TiledGrass.json")
+loader.load(() => {
+  let sheet = loader.resources["img/Tilesets/TiledGrass.json"].spritesheet;
+  sheet.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+
+  grass.push(new PIXI.Sprite(sheet.textures["Grass-0"]));
+  grass[0].x = 300;
+  grass[0].y = 300;
+  grass[0].scale.x = 20;
+  grass[0].scale.y = 20;
+  stage.addChild(grass[0]);
+});
+
+
+
+
+ticker.add(mainGameLoop);
+ticker.start();
+
+function mainGameLoop() {
+
+
+  renderer.render(stage);
+}

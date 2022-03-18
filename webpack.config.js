@@ -1,7 +1,11 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/main/js/index.ts',
+    
+    entry: {
+        'src/main/resources/static/js/index': './src/main/js/index.ts',
+        'target/classes/static/js/index': './src/main/js/index.ts'
+    },
     devtool: 'inline-source-map',
     mode: 'development',
     module: {
@@ -17,7 +21,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: 'index.js',
-        path: path.resolve(__dirname, 'src/main/resources/static/js'),
+        filename: '[name].js',
+        path: path.resolve(__dirname, './'),
     },
 };

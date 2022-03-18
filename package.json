@@ -19,6 +19,7 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
+    "@pixi/tilemap": "^3.2.2",
     "pixi.js": "^6.2.2"
   }
 }
