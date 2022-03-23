@@ -1,36 +1,11 @@
 // Imports
 import * as PIXI from 'pixi.js';
+import { Renderer } from './gameEngine/renderer';
 
 
-// Constants
+let renderer = new Renderer();
 
-
-let windowWidth = window.innerWidth;
-let windowHeight = window.innerHeight;
-
-const canvas = <HTMLCanvasElement> document.getElementById("mycanvas");
-
-const renderer = new PIXI.Renderer({
-    view: canvas, 
-    width: windowWidth, 
-    height: windowHeight, 
-    backgroundColor: 0x1099bb, 
-    resolution: window.devicePixelRatio || 1,
-    autoDensity: true
-});
-
-window.addEventListener("resize", resizeEvent);
-
-function resizeEvent() {
-  windowWidth = window.innerWidth;
-  windowHeight = window.innerHeight;
-  renderer.resize(windowWidth, windowHeight);
-}
-
-const stage = new PIXI.Container();
 const loader = new PIXI.Loader();
-const ticker = new PIXI.Ticker();
-
 
 let grass : PIXI.Sprite[] = [];
 
@@ -44,17 +19,12 @@ loader.load(() => {
   grass[0].y = 300;
   grass[0].scale.x = 20;
   grass[0].scale.y = 20;
-  stage.addChild(grass[0]);
+  
+  renderer.AddToStage(grass[0]);
 });
 
-
-
-
-ticker.add(mainGameLoop);
-ticker.start();
+renderer.GameLoop(mainGameLoop);
 
 function mainGameLoop() {
-
-
-  renderer.render(stage);
+  
 }
