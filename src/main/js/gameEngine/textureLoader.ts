@@ -14,16 +14,19 @@ export class TextureLoader {
     }
 
     public load(fn : Function) {
-        let textures : PIXI.Texture[] = [];
 
         this.loader.load(() => {
+            let textures : PIXI.Texture[] = [];
+
+            // Loading each added file seperately
             this.texturePaths.forEach(el => {
+                // Push each texture to textures and callback
                 textures.push(this.loader.resources[el].texture);
             });
 
-            // Callback with textures loaded
             fn(textures);
         });
+        
     }
 
     protected loader : PIXI.Loader;

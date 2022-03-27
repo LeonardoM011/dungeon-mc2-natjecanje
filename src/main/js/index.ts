@@ -2,19 +2,22 @@
 import * as PIXI from 'pixi.js';
 import { Renderer } from './gameEngine/renderer';
 import { TextureLoader } from './gameEngine/textureLoader';
+import { SpriteSheetLoader } from './gameEngine/spriteSheetLoader';
+
 
 let renderer = new Renderer();
 
 let grass : PIXI.Sprite[] = [];
 
-let textureLoader = new TextureLoader();
+let spriteSheetLoader = new SpriteSheetLoader();
 
 let chestTexture : PIXI.Texture;
 let chestSprite : PIXI.Sprite;
 
-textureLoader.add("img/Objects/Chest.png");
-textureLoader.load((texture : PIXI.Texture[]) => {
-  chestTexture = texture[0];
+spriteSheetLoader.add("img/Tilesets/TiledGrass.json", 3, "Grass-");
+spriteSheetLoader.load((texture : PIXI.Texture[][]) => {
+  chestTexture = texture[0][1];
+  console.log(texture.length);
   chestSprite = new PIXI.Sprite(chestTexture);
   chestSprite.x = 300;
   chestSprite.y = 300;
