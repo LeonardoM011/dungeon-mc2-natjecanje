@@ -1,7 +1,8 @@
 import * as PIXI from 'pixi.js';
 
 export class Renderer {
-    public constructor() {
+    
+    constructor() {
         this.canvas = <HTMLCanvasElement> document.getElementById("mycanvas");
         
         this.windowWidth = window.innerWidth;
@@ -16,39 +17,39 @@ export class Renderer {
             autoDensity: true,
         });
 
-        window.addEventListener("resize", this.ResizeEvent.bind(this));
+        window.addEventListener("resize", this.resizeEvent.bind(this));
 
         this.ticker = new PIXI.Ticker;
         this.stage = new PIXI.Container;
     }
 
-    public AddToStage(sprite : PIXI.Sprite) {
+    public addToStage(sprite : PIXI.Sprite) {
         this.stage.addChild(sprite);
     }
 
-    public GameLoop(fn : Function) {
-        this.gameLoopFn = fn;
-        this.ticker.add(this.MainGameLoop.bind(this));
+    public gameLoop(fn : any /* Has to be of type any */) {
+        this.ticker.add(fn);
+        this.ticker.add(this.afterGameLoop.bind(this));
         this.ticker.start();
     }
 
-    private MainGameLoop() {
-        this.gameLoopFn();
+    // Run after MainGameLoop
+    private afterGameLoop() {
 
         this.pixiRenderer.render(this.stage);
     }
 
-    private ResizeEvent() {
+    // Run when resizing window
+    private resizeEvent() {
         this.windowWidth = window.innerWidth - this.windowOffsetX;
         this.windowHeight = window.innerHeight - this.windowOffsetY;
         this.pixiRenderer.resize(this.windowWidth - this.windowOffsetX, this.windowHeight - this.windowOffsetY);
     }
 
-    private windowOffsetX : number = 0;
-    private windowOffsetY : number = 0;
+    private windowOffsetX = 0;
+    private windowOffsetY = 0;
     private windowWidth : number;
     private windowHeight : number;
-    private gameLoopFn : Function;
     private ticker : PIXI.Ticker;
     private stage : PIXI.Container;
     private pixiRenderer : PIXI.Renderer;
