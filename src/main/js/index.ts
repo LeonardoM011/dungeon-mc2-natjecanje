@@ -1,47 +1,30 @@
 // Imports
-import * as PIXI from 'pixi.js';
-import { Renderer } from './gameEngine/renderer';
-import { TextureLoader } from './gameEngine/textureLoader';
-import { SpriteSheetLoader } from './gameEngine/spriteSheetLoader';
-
+import { Renderer } from './gameEngine/windowManager/renderer';
+import { TextureLoader } from './gameEngine/loadManager/textureLoader';
+import { SpriteSheetLoader } from './gameEngine/loadManager/spriteSheetLoader';
+import { Sprite } from './gameEngine/objectManager/sprite';
+import { Texture } from './gameEngine/objectManager/texture';
+import { Vector2f } from './gameEngine/math/Vector';
 
 let renderer = new Renderer();
 
-let grass : PIXI.Sprite[] = [];
+let grass : Sprite[] = [];
 
 let spriteSheetLoader = new SpriteSheetLoader();
 
-let chestTexture : PIXI.Texture;
-let chestSprite : PIXI.Sprite;
+let chestTexture : Texture;
+let chestSprite : Sprite;
 
-spriteSheetLoader.add("img/Tilesets/TiledGrass.json", 3, "Grass-");
-spriteSheetLoader.load((texture : PIXI.Texture[][]) => {
+spriteSheetLoader.add("img/Tilesets/TiledGrass.json", 71, "Grass-");
+spriteSheetLoader.load((texture : Texture[][]) => {
   chestTexture = texture[0][1];
-  console.log(texture.length);
-  chestSprite = new PIXI.Sprite(chestTexture);
-  chestSprite.x = 300;
-  chestSprite.y = 300;
-  renderer.addToStage(chestSprite);
+  chestSprite = new Sprite(chestTexture, new Vector2f(300, 300));
+  renderer.renderSprite(chestSprite);
 
   renderer.gameLoop(mainGameLoop);
 });
 
-/*const loader = new PIXI.Loader();
-loader.add("img/Tilesets/TiledGrass.json")
-loader.load(() => {
-  let sheet = loader.resources["img/Tilesets/TiledGrass.json"].spritesheet;
-  sheet.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-  grass.push(new PIXI.Sprite(sheet.textures["Grass-0"]));
-  grass[0].x = 300;
-  grass[0].y = 300;
-  grass[0].scale.x = 20;
-  grass[0].scale.y = 20;
-  
-  renderer.addToStage(grass[0]);
-
-  renderer.gameLoop(mainGameLoop);
-});*/
-
-function mainGameLoop() : void {
-  //grass[0].x += 1;
+function mainGameLoop(delta : number) : void {
+  chestSprite.move(new Vector2f(1, 0), delta);
+  console.log(delta);
 }
