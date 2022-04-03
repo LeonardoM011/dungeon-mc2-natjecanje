@@ -4,7 +4,10 @@ import { TextureLoader } from './gameEngine/loadManager/textureLoader';
 import { SpriteSheetLoader } from './gameEngine/loadManager/spriteSheetLoader';
 import { Sprite } from './gameEngine/objectManager/sprite';
 import { Texture } from './gameEngine/objectManager/texture';
-import { Vector2f } from './gameEngine/math/Vector';
+import { Vector2f } from './gameEngine/math/vector';
+import { XMLParser } from './gameEngine/utils/xmlParser';
+import { TileMapInfo, TiledParser } from './gameEngine/utils/tiledParser';
+import { Tilemap } from './gameEngine/loadManager/tilemap';
 
 let renderer = new Renderer();
 
@@ -12,19 +15,21 @@ let grass : Sprite[] = [];
 
 let spriteSheetLoader = new SpriteSheetLoader();
 
-let chestTexture : Texture;
-let chestSprite : Sprite;
-
+// TEST
+//let xml : TileMapInfo = TiledParser("tilemaps/mapa.tmx");
+//console.log(xml.data);
+//---------
 spriteSheetLoader.add("img/Tilesets/TiledGrass.json", 71, "Grass-");
 spriteSheetLoader.load((texture : Texture[][]) => {
-  chestTexture = texture[0][1];
-  chestSprite = new Sprite(chestTexture, new Vector2f(300, 300));
-  renderer.renderSprite(chestSprite);
+  let textures = texture[0];
+
+  let tilemap = new Tilemap("tilemaps/mapa.tmx", textures, new Vector2f(0, 0));
+
+  renderer.renderTilemap(tilemap);
 
   renderer.gameLoop(mainGameLoop);
 });
 
 function mainGameLoop(delta : number) : void {
-  chestSprite.move(new Vector2f(1, 0), delta);
-  console.log(delta);
+  
 }

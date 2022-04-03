@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js';
+import { Tilemap } from '../loadManager/tilemap';
 import { Sprite } from '../objectManager/sprite';
 
 export class Renderer {
@@ -26,6 +27,17 @@ export class Renderer {
 
     public renderSprite(sprite : Sprite) : void {
         this.stage.addChild(sprite.sprite);
+    }
+
+    public renderTilemap(tilemap : Tilemap) : void {
+        let sprites = tilemap.sprites;
+        sprites.forEach(arr => {
+            arr.forEach(e => {
+                if (e != undefined) {
+                    this.stage.addChild(e.sprite);
+                }
+            });
+        });
     }
 
     public gameLoop(fn : any /* Has to be of type any */) : void {

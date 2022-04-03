@@ -1,2 +1,2 @@
 
-export type Pair = { first: number, second: number };
+export type Pair2f = { first? : number, second? : number };

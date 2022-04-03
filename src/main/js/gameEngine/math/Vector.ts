@@ -1,4 +1,4 @@
-import { Pair } from "../utils/types";
+import { Pair2f } from "../utils/types";
 
 export class Vector2f {
     constructor(x : number, y : number) {
@@ -22,7 +22,7 @@ export class Vector2f {
         this._x = value;
     }
 
-    set xy(value : Pair) {
+    set xy(value : Pair2f) {
         this._x = value.first;
         this._y = value.second;
     }

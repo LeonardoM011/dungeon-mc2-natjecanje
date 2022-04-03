@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { Texture } from './texture';
-import { Vector2f } from '../math/Vector';
+import { Vector2f } from '../math/vector';
 
 export class Sprite {
 
@@ -25,6 +25,14 @@ export class Sprite {
     set setPos(value : Vector2f) {
         this.pixiSprite.x = value.x;
         this.pixiSprite.y = value.y;
+    }
+
+    public setPosX(value : number) {
+        this.pixiSprite.x = value;
+    }
+
+    public setPosY(value : number) {
+        this.pixiSprite.y = value;
     }
 
     get pos() : Vector2f {
