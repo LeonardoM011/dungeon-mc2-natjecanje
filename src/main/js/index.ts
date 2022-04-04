@@ -19,11 +19,17 @@ let spriteSheetLoader = new SpriteSheetLoader();
 //let xml : TileMapInfo = TiledParser("tilemaps/mapa.tmx");
 //console.log(xml.data);
 //---------
-spriteSheetLoader.add("img/Tilesets/TiledGrass.json", 71, "Grass-");
+spriteSheetLoader.add("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 spriteSheetLoader.load((texture : Texture[][]) => {
   let textures = texture[0];
-
-  let tilemap = new Tilemap("tilemaps/mapa.tmx", textures, new Vector2f(0, 0));
+  console.log(textures[0]);
+  let tilemap = new Tilemap("img/test/mapa1.tmx", textures, new Vector2f(renderer.width / 2, renderer.height / 2));
+  tilemap.scale(new Vector2f(3, 3));
+  //tilemap.pos(new Vector2f(-renderer.width / 2, -renderer.height / 2));
+  /*// TEST
+  let testSprite = new Sprite(textures[1], new Vector2f(0, 0));
+  renderer.renderSprite(testSprite);
+  // ------*/
 
   renderer.renderTilemap(tilemap);
 

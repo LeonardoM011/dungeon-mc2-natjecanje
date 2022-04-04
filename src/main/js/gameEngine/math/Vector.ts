@@ -22,11 +22,6 @@ export class Vector2f {
         this._x = value;
     }
 
-    set xy(value : Pair2f) {
-        this._x = value.first;
-        this._y = value.second;
-    }
-
     private _x : number;
     private _y : number;
 }

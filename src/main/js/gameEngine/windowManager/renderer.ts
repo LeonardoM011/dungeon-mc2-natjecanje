@@ -30,14 +30,15 @@ export class Renderer {
     }
 
     public renderTilemap(tilemap : Tilemap) : void {
-        let sprites = tilemap.sprites;
+        /*let sprites = tilemap.sprites;
         sprites.forEach(arr => {
             arr.forEach(e => {
                 if (e != undefined) {
                     this.stage.addChild(e.sprite);
                 }
             });
-        });
+        });*/
+        this.stage.addChild(tilemap.container);
     }
 
     public gameLoop(fn : any /* Has to be of type any */) : void {
@@ -50,6 +51,14 @@ export class Renderer {
     private afterGameLoop() : void {
 
         this.pixiRenderer.render(this.stage);
+    }
+
+    get width() : number {
+        return this.windowWidth;
+    }
+
+    get height() : number {
+        return this.windowHeight;
     }
 
     // Run when resizing window

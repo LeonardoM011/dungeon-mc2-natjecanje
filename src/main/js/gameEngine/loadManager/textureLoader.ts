@@ -22,7 +22,9 @@ export class TextureLoader {
             // Loading each added file seperately
             this.texturePaths.forEach(el => {
                 // Push each texture to textures and callback
-                textures.push(new Texture(this.loader.resources[el].texture));
+                let tex = this.loader.resources[el].texture;
+                tex.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+                textures.push(new Texture(tex));
             });
 
             fn(textures);
