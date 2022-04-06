@@ -4,8 +4,15 @@ import { Texture } from "../objectManager/texture";
 import { TileMapInfo, TiledParser } from "../utils/tiledParser";
 import * as PIXI from 'pixi.js';
 
+/** Tilemap object which stores sprites into container */
 export class Tilemap {
     
+    /**
+     * Create new tilemap from Tiled xml file
+     * @param tilemapPath path to tilemap .tmx file made by Tiled software
+     * @param tileset array of textures made by creating spritesheet using spritesheetloader
+     * @param origin coords to place created tilemap
+     */
     constructor(tilemapPath : string, tileset : Texture[], origin : Vector2f) {
         this.spritesContainer = new PIXI.Container;
 
@@ -15,12 +22,14 @@ export class Tilemap {
 
         for (let i = 0; i < mapInfo.height; i++) {
             for (let j = 0; j < mapInfo.width; j++) {
-                // 0 is not a tile
+                // Tiled sets 0 to be empty tile and first tile on 1
                 let tileId = (mapInfo.data[i][j]) - 1;
+                // Ignore empty tile
                 if (tileId == -1) {
                     continue;
                 }
 
+                // Create new sprite and add it to container
                 this.allSprites[i][j] = new Sprite(tileset[tileId], new Vector2f(0, 0));
                 this.allSprites[i][j].setPosX(mapInfo.tileWidth * j);
                 this.allSprites[i][j].setPosY(mapInfo.tileHeight * i);
@@ -34,12 +43,20 @@ export class Tilemap {
         this.spritesContainer.y = origin.y;
     }
 
+    /**
+     * Set scale to value
+     * @param value scale to what size multiplier, 1 is default
+     */
     public scale(value : Vector2f) : void {
         this.spritesContainer.scale.x = value.x;
         this.spritesContainer.scale.y = value.y;
     }
 
-    public pos(value : Vector2f) {
+    /**
+     * Set position to value
+     * @param value position to set container, 0,0 is top left
+     */
+    public pos(value : Vector2f) : void {
         this.spritesContainer.x = value.x
         this.spritesContainer.y = value.y
     }
@@ -57,10 +74,12 @@ export class Tilemap {
         this.spritesContainer.pivot.y = value.y * this.xmlData.height / this.spritesContainer.scale.y;
     }*/
 
+    /** Get sprite 2D array */
     get sprites() : Sprite[][] {
         return this.allSprites;
     }
 
+    /** Get container, don't use if you don't know what you're doing */
     get container() : PIXI.Container {
         return this.spritesContainer;
     }

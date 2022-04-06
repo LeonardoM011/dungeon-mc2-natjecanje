@@ -5,6 +5,7 @@ import { Texture } from '../objectManager/texture';
 
 type Sheet = { path : string, imageWidth : number, imageHeight : number, tileWidth : number, tileHeight : number };
 
+// TODO REWORK ALL THIS TO USE ONLY 1 LOADER
 export class SpriteSheetLoader {
 
     constructor() {

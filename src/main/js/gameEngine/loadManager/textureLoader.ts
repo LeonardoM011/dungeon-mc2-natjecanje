@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { Texture } from '../objectManager/texture';
 
+// TODO: REWORK THIS TO USE ONLY 1 LOADER
 export class TextureLoader {
 
     constructor() {

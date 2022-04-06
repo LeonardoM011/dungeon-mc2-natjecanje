@@ -11,7 +11,11 @@ export type TileMapInfo = {
     data? : number[][]
 };
 
-// Import tilemap from program Tiled and returns object of type TiledMapInfo
+/**
+ * Import tilemap from program Tiled
+ * @param path path to tmx file
+ * @returns object of type TiledMapInfo
+ */
 export function TiledParser(path : string) : TileMapInfo {
     let tileMapInfo : TileMapInfo = {};
     let xmlMap = new XMLParser(path);

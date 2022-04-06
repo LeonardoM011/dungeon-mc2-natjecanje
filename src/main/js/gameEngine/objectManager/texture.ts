@@ -1,12 +1,17 @@
 import * as PIXI from 'pixi.js';
 import { Mat2f } from '../math/mat';
 
+/** Abstraction class for PIXI.Texture */
 export class Texture {
 
+    /**
+     * Load textureloader into texture
+     * @param texture PIXI.Texture object got with textureloader
+     * @param rect optional argument to crop a larger texture into smaller, should contain x and y pos and width and height
+     */
     constructor(texture : PIXI.Texture, rect? : Mat2f) {
         
         if (typeof rect !== 'undefined') {
-            // Grozno izgleda, znam.
             // Set texture and crop only to the point that is specified
             this.pixiTexture = new PIXI.Texture(
                 texture.baseTexture,
@@ -20,6 +25,7 @@ export class Texture {
         }
     }
 
+    /** get pixi.texture, don't use if you don't know what you're doing */
     get texture() : PIXI.Texture {
         return this.pixiTexture;
     }
