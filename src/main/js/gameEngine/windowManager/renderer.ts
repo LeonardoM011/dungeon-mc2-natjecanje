@@ -1,12 +1,17 @@
 import * as PIXI from 'pixi.js';
 import { Input } from '../inputManager/input';
-import { Tilemap } from '../loadManager/tilemap';
+import { Tilemap } from '../objectManager/tilemap';
+import { Vector2f } from '../math/vector';
 import { Sprite } from '../objectManager/sprite';
 
 export class Renderer {
     
     /** Initialize renderer, must call on top of the script */
-    constructor() {
+    /**
+     * 
+     * @param backgroundColor hexadecimal number that represents color
+     */
+    constructor(backgroundColor? : number) {
         // Grab canvas element
         this.htmlCanvas = <HTMLCanvasElement> document.getElementById("mycanvas");
         
@@ -14,11 +19,14 @@ export class Renderer {
         this.windowWidth = window.innerWidth;
         this.windowHeight = window.innerHeight;
         
+        // If backgroundColor is unspecified select magenta color
+        let backColor = (typeof backgroundColor !== 'undefined' ? backgroundColor : 0xFF00FF);
+
         this.pixiRenderer = new PIXI.Renderer({
             view: this.htmlCanvas, 
             width: this.windowWidth - this.windowOffsetX, 
             height: this.windowHeight - this.windowOffsetY, 
-            backgroundColor: 0x1099bb, 
+            backgroundColor: backColor, 
             resolution: window.devicePixelRatio || 1,
             autoDensity: true,
         });
@@ -30,6 +38,10 @@ export class Renderer {
         this.ticker = new PIXI.Ticker;
         this.stage = new PIXI.Container;
         // --------------
+        this.stage.pivot.x = this.windowWidth / 2;
+        this.stage.pivot.y = this.windowHeight / 2;
+        this.stage.x = this.windowWidth / 2;
+        this.stage.y = this.windowHeight / 2;
     }
 
     /**
@@ -45,15 +57,24 @@ export class Renderer {
      * @param tilemap tilemap which you want to render
      */
     public renderTilemap(tilemap : Tilemap) : void {
-        /*let sprites = tilemap.sprites;
-        sprites.forEach(arr => {
-            arr.forEach(e => {
-                if (e != undefined) {
-                    this.stage.addChild(e.sprite);
-                }
-            });
-        });*/
         this.stage.addChild(tilemap.container);
+    }
+
+    public setStagePos(value : Vector2f) : void {
+        this.stage.x = value.x;
+        this.stage.y = value.y;
+    }
+
+    public moveStage(value : Vector2f) : void {
+        this.stage.x += value.x;
+        this.stage.y += value.y;
+    }
+
+    public scaleStage(value : Vector2f) : void {
+        /*this.stage.pivot.x = 0.5 * this.stage.width;
+        this.stage.pivot.y = 0.5 * this.stage.height;*/
+        let newScale = new Vector2f(this.stage.scale.x + value.x, this.stage.scale.y + value.y)
+        this.stage.scale.set(newScale.x, newScale.y);
     }
 
     /**

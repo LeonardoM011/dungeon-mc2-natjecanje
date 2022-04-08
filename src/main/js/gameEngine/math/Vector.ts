@@ -6,6 +6,12 @@ export class Vector2f {
         this._y = y;
     }
 
+    public reverse() : Vector2f {
+        this._x = -this._x;
+        this._y = -this._y;
+        return this;
+    }
+
     /** Get first value of vector */
     get x() : number {
         return this._x;
