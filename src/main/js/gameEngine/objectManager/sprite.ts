@@ -21,14 +21,7 @@ export class Sprite {
      * @param value move by how many pixels
      * @param delta argument is optional, moves it independent from FPS. Get it from gameLoop
     */
-    public move(value : Vector2f, delta? : number) : void {
-        // Check if deltatime is given
-        if (typeof delta !== 'undefined') {
-            this.pixiSprite.x += value.x * delta;
-            this.pixiSprite.y += value.y * delta;
-            return;
-        }
-        // If delta is not given
+    public move(value : Vector2f) : void {
         this.pixiSprite.x += value.x;
         this.pixiSprite.y += value.y;
     }
@@ -48,6 +41,11 @@ export class Sprite {
      */
     public setPosX(value : number) : void {
         this.pixiSprite.x = value;
+    }
+
+    public setScale(value : Vector2f) : void {
+        this.pixiSprite.scale.x = value.x;
+        this.pixiSprite.scale.y = value.y;
     }
 
     /**

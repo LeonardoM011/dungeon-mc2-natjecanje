@@ -4,14 +4,14 @@ import { TextureLoader } from './gameEngine/loadManager/textureLoader';
 import { Sprite } from './gameEngine/objectManager/sprite';
 import { Texture } from './gameEngine/objectManager/texture';
 import { Vector2f } from './gameEngine/math/vector';
-import { XMLParser } from './gameEngine/utils/xmlParser';
-import { TileMapInfo, TiledParser } from './gameEngine/utils/tiledParser';
 import { Tilemap } from './gameEngine/objectManager/tilemap';
 import { Input } from './gameEngine/inputManager/input';
 
 import * as PIXI from 'pixi.js';
+import { CodeBox } from './gameEngine/windowManager/codeBox';
 
-let renderer = new Renderer(0x422800);
+let renderer = new Renderer(0x422800, 0, 300);
+let codeBox = new CodeBox();
 
 let input = new Input(renderer);
 
@@ -35,6 +35,7 @@ textureLoader.load((texture : Texture[][]) => {
 
   let mageTexture = texture[1][0];
   let mage = new Sprite(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
+  mage.setScale(new Vector2f(2.7, 2.7));
   renderer.renderSprite(mage);
 
 
@@ -45,8 +46,13 @@ textureLoader.after(() => {
 });
 
 function mainGameLoop(delta : number) : void {
-  //renderer.mouse();
-  //console.log();
+
+  // TEST
+  if (input.getKeyDown("b")) {
+    codeBox.onCompile();
+  }
+  // ----
+
 
   interactiveMap(delta);
 }
@@ -69,7 +75,5 @@ function interactiveMap(delta : number) : void {
   if (input.getWheelDirection()) {
     renderer.scaleStage(new Vector2f(-input.getWheelDirection() / 125, -input.getWheelDirection() / 125));
   }
-  //console.log(input.getWheelDirection());
   // ---------------------
-
 }

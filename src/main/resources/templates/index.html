@@ -4,15 +4,44 @@
     <meta charset="UTF-8">
     <title>Title Leo</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
+        body {
+            margin: 0 0;
+            padding: 0 0;
             overflow: hidden;
         }
+        canvas { display: block; }
+        #consoleDiv {
+            border: solid 1px white;
+            height: 298px;
+            background-color: #22272E;
+        }
+        #compileButton {
+            margin: 5px 5px 0 5px;
+            float: right;
+            background-color: #22272E;
+            color: rgb(3, 192, 3);
+        }
+        #console {
+            float:left;
+            resize: none;
+            margin: 5px 10px;
+            border: solid 1px white;
+            border-radius: 2px;
+            color: white;
+            height: calc(100% - 40px);
+            width: calc(100% - 20px);
+            background-color: #22272E;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/theme/monokai.min.css">
 </head>
 <body>
     <canvas id="mycanvas"></canvas>
+    <div id="consoleDiv">
+        <button id="compileButton" type="button">Compile ></button>
+        <div id="console" ></div>
+    </div>
     <script src="/js/index.js" type="application/javascript"></script>
 </body>
 </html>

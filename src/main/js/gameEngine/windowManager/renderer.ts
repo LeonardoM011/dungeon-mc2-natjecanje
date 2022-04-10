@@ -11,25 +11,31 @@ export class Renderer {
      * 
      * @param backgroundColor hexadecimal number that represents color
      */
-    constructor(backgroundColor? : number) {
+    constructor(backgroundColor? : number, offsetWidth? : number, offsetHeight? : number) {
         // Grab canvas element
         this.htmlCanvas = <HTMLCanvasElement> document.getElementById("mycanvas");
         
+        this.windowOffsetX = offsetWidth;
+        this.windowOffsetY = offsetHeight;
         // Resize renderer to be fullscreen
-        this.windowWidth = window.innerWidth;
-        this.windowHeight = window.innerHeight;
+        this.windowWidth = window.innerWidth - this.windowOffsetX;
+        this.windowHeight = window.innerHeight - this.windowOffsetY;
         
         // If backgroundColor is unspecified select magenta color
         let backColor = (typeof backgroundColor !== 'undefined' ? backgroundColor : 0xFF00FF);
 
         this.pixiRenderer = new PIXI.Renderer({
             view: this.htmlCanvas, 
-            width: this.windowWidth - this.windowOffsetX, 
-            height: this.windowHeight - this.windowOffsetY, 
+            width: this.windowWidth, 
+            height: this.windowHeight, 
             backgroundColor: backColor, 
             resolution: window.devicePixelRatio || 1,
             autoDensity: true,
+            antialias: false,
         });
+        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        PIXI.settings.ROUND_PIXELS = false;
+        PIXI.settings.RENDER_OPTIONS.antialias = false;
 
         window.addEventListener("resize", this.resizeEvent.bind(this));
         this.disableContextMenu();
@@ -42,6 +48,7 @@ export class Renderer {
         this.stage.pivot.y = this.windowHeight / 2;
         this.stage.x = this.windowWidth / 2;
         this.stage.y = this.windowHeight / 2;
+
     }
 
     /**
@@ -117,7 +124,7 @@ export class Renderer {
     private resizeEvent() : void {
         this.windowWidth = window.innerWidth - this.windowOffsetX;
         this.windowHeight = window.innerHeight - this.windowOffsetY;
-        this.pixiRenderer.resize(this.windowWidth - this.windowOffsetX, this.windowHeight - this.windowOffsetY);
+        this.pixiRenderer.resize(this.windowWidth, this.windowHeight);
     }
 
     /** Disables right click context and middle click */

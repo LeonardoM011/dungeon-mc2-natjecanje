@@ -1,52 +1,5 @@
-// ------------------------------------------------------
-// IGNORE THIS WHOLE FILE, THIS IS FOR TEST PURPOSES ONLY
-// ------------------------------------------------------
-import * as PIXI from 'pixi.js';
-
-const app = new PIXI.Application({ backgroundColor: 0x1099bb });
-document.body.appendChild(app.view);
+//import 'codemirror.css';
+import * as CodeMirror from 'codemirror';
 
 
-PIXI.Loader.shared.add('img/test/0x72_16x16DungeonTileset.v4.png');
-PIXI.Loader.shared.load((loader, resources) => {
-    let sheet = resources['img/test/0x72_16x16DungeonTileset.v4.png'];
-
-    let bunnyText = new PIXI.Texture(sheet.texture.baseTexture, new PIXI.Rectangle(0, 16, 16, 16));
-    let bunny = new PIXI.Sprite(bunnyText);
-
-    bunny.anchor.set(0.5);
-
-    // move the sprite to the center of the screen
-    bunny.x = app.screen.width / 2;
-    bunny.y = app.screen.height / 2;
-
-    app.stage.addChild(bunny);
-
-    app.ticker.add((delta) => {
-        // just for fun, let's rotate mr rabbit a little
-        // delta is 1 if running at 100% performance
-        // creates frame-independent transformation
-        //bunny.rotation += 0.1 * delta;
-    });
-});
-
-/*// create a new Sprite from an image path
-const bunny = PIXI.Sprite.from('img/test/0x72_16x16DungeonTileset.v4.png');
-
-// center the sprite's anchor point
-bunny.anchor.set(0.5);
-
-// move the sprite to the center of the screen
-bunny.x = app.screen.width / 2;
-bunny.y = app.screen.height / 2;
-
-app.stage.addChild(bunny);
-
-// Listen for animate update
-app.ticker.add((delta) => {
-    // just for fun, let's rotate mr rabbit a little
-    // delta is 1 if running at 100% performance
-    // creates frame-independent transformation
-    bunny.rotation += 0.1 * delta;
-});
-*/
+//var myCodeMirror = CodeMirror(document.body);
