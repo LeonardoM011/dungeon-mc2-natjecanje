@@ -6,7 +6,8 @@ import { Texture } from './gameEngine/objectManager/texture';
 import { Vector2f } from './gameEngine/math/vector';
 import { Tilemap } from './gameEngine/objectManager/tilemap';
 import { Input } from './gameEngine/inputManager/input';
-
+import { sleep } from './gameEngine/utils/utils';
+import * as Acorn from 'acorn';
 import * as PIXI from 'pixi.js';
 import { CodeBox } from './gameEngine/windowManager/codeBox';
 
@@ -24,6 +25,7 @@ let textureLoader = new TextureLoader();
 //console.log(xml.data);
 //---------
 let tilemap : Tilemap;
+let mage : Sprite;
 
 textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 textureLoader.addTexture("img/test/mage.png");
@@ -34,7 +36,7 @@ textureLoader.load((texture : Texture[][]) => {
   renderer.renderTilemap(tilemap);
 
   let mageTexture = texture[1][0];
-  let mage = new Sprite(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
+  mage = new Sprite(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
   mage.setScale(new Vector2f(2.7, 2.7));
   renderer.renderSprite(mage);
 
@@ -42,15 +44,43 @@ textureLoader.load((texture : Texture[][]) => {
 });
 
 textureLoader.after(() => {
+  // COMPILER
+  codeBox.addCompileCallback(async () => {
+    //let str = codeBox.getContents().split("\n");
+    let str = codeBox.getContents();
+
+    let parser = new Acorn.Parser({ecmaVersion: 2020}, str);
+    console.log(parser.parse());
+
+    //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
+
+    /*for (let i = 0; i < str.length; i++) {
+      await sleep(500);
+      if (str[i] === "LEFT") {
+        mage.move(new Vector2f(-100, 0));
+      } else if (str[i] === "RIGHT") {
+        mage.move(new Vector2f(100, 0));
+      } else if (str[i] === "UP") {
+        mage.move(new Vector2f(0, -100));
+      } else if (str[i] === "DOWN") {
+        mage.move(new Vector2f(0, 100));
+      }
+    }*/
+    /*var geval = eval;
+    for (let i = 0; i < str.length; i++) {
+      await sleep(500);
+      let f = Function("return " + str[i]);
+      console.log(f());
+    }*/
+  })
+
   renderer.gameLoop(mainGameLoop);
 });
 
 function mainGameLoop(delta : number) : void {
 
   // TEST
-  if (input.getKeyDown("b")) {
-    codeBox.onCompile();
-  }
+  
   // ----
 
 

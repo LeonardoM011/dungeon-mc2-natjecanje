@@ -12,6 +12,7 @@
   "author": "LeonardoM011",
   "license": "MIT",
   "devDependencies": {
+    "@types/acorn": "^4.0.6",
     "@types/codemirror": "^5.60.5",
     "@types/jquery": "^3.5.14",
     "ts-loader": "^9.2.7",
@@ -22,8 +23,10 @@
   },
   "dependencies": {
     "@pixi/tilemap": "^3.2.2",
+    "acorn": "^8.7.0",
     "codemirror": "^5.65.2",
     "jquery": "^3.6.0",
-    "pixi.js": "^6.2.2"
+    "pixi.js": "^6.2.2",
+    "sval": "^0.4.8"
   }
 }

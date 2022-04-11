@@ -19,9 +19,14 @@ export class CodeBox {
         return this.editor.getValue();
     }
 
-    public onCompile() {
-        alert(this.editor.getValue());
+    public addCompileCallback(fn : Function) {
+        this.callback = fn;
     }
 
+    private onCompile() {
+        this.callback();
+    }
+
+    private callback : Function;
     private editor : CodeMirror.Editor;
 };
