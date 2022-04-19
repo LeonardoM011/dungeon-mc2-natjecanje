@@ -66,5 +66,5 @@ export class Sprite {
         return this.pixiSprite;
     }
 
-    private pixiSprite : PIXI.Sprite; 
+    protected pixiSprite : PIXI.Sprite; 
 };

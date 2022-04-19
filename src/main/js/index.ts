@@ -6,9 +6,13 @@ import { Texture } from './gameEngine/objectManager/texture';
 import { Vector2f } from './gameEngine/math/vector';
 import { Tilemap } from './gameEngine/objectManager/tilemap';
 import { Input } from './gameEngine/inputManager/input';
-
+import { sleep } from './gameEngine/utils/utils';
+import * as Acorn from 'acorn';
 import * as PIXI from 'pixi.js';
 import { CodeBox } from './gameEngine/windowManager/codeBox';
+import { MagePlayer } from './players/magePlayer';
+import { Commands } from './languageSystem/Commands';
+import * as CodeMirror from 'codemirror';
 
 let renderer = new Renderer(0x422800, 0, 300);
 let codeBox = new CodeBox();
@@ -24,6 +28,7 @@ let textureLoader = new TextureLoader();
 //console.log(xml.data);
 //---------
 let tilemap : Tilemap;
+let mage : MagePlayer;
 
 textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 textureLoader.addTexture("img/test/mage.png");
@@ -34,23 +39,43 @@ textureLoader.load((texture : Texture[][]) => {
   renderer.renderTilemap(tilemap);
 
   let mageTexture = texture[1][0];
-  let mage = new Sprite(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
+  mage = new MagePlayer(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
   mage.setScale(new Vector2f(2.7, 2.7));
+
   renderer.renderSprite(mage);
 
 
 });
 
 textureLoader.after(() => {
+  // COMPILER
+  codeBox.addCompileCallback(async () => {
+    let str = codeBox.getContents().split("\n");
+
+    //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
+    await sleep(500);
+    for (let i = 0; i < str.length; i++) {
+      codeBox.markLine(i);
+
+      let row = str[i].toLocaleUpperCase();
+
+      if (Commands[row]) {
+        Commands[row](mage);
+      } else {
+        alert("NE POSTOJI");
+      }
+      await sleep(500);
+      codeBox.unmarkLine(i);
+    }
+  })
+
   renderer.gameLoop(mainGameLoop);
 });
 
 function mainGameLoop(delta : number) : void {
 
   // TEST
-  if (input.getKeyDown("b")) {
-    codeBox.onCompile();
-  }
+  
   // ----
 
 
