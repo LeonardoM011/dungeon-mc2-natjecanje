@@ -10,6 +10,9 @@ import { sleep } from './gameEngine/utils/utils';
 import * as Acorn from 'acorn';
 import * as PIXI from 'pixi.js';
 import { CodeBox } from './gameEngine/windowManager/codeBox';
+import { MagePlayer } from './players/magePlayer';
+import { Commands } from './languageSystem/Commands';
+import * as CodeMirror from 'codemirror';
 
 let renderer = new Renderer(0x422800, 0, 300);
 let codeBox = new CodeBox();
@@ -25,7 +28,7 @@ let textureLoader = new TextureLoader();
 //console.log(xml.data);
 //---------
 let tilemap : Tilemap;
-let mage : Sprite;
+let mage : MagePlayer;
 
 textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 textureLoader.addTexture("img/test/mage.png");
@@ -36,8 +39,9 @@ textureLoader.load((texture : Texture[][]) => {
   renderer.renderTilemap(tilemap);
 
   let mageTexture = texture[1][0];
-  mage = new Sprite(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
+  mage = new MagePlayer(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
   mage.setScale(new Vector2f(2.7, 2.7));
+
   renderer.renderSprite(mage);
 
 
@@ -46,32 +50,23 @@ textureLoader.load((texture : Texture[][]) => {
 textureLoader.after(() => {
   // COMPILER
   codeBox.addCompileCallback(async () => {
-    //let str = codeBox.getContents().split("\n");
-    let str = codeBox.getContents();
-
-    let parser = new Acorn.Parser({ecmaVersion: 2020}, str);
-    console.log(parser.parse());
+    let str = codeBox.getContents().split("\n");
 
     //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
-
-    /*for (let i = 0; i < str.length; i++) {
-      await sleep(500);
-      if (str[i] === "LEFT") {
-        mage.move(new Vector2f(-100, 0));
-      } else if (str[i] === "RIGHT") {
-        mage.move(new Vector2f(100, 0));
-      } else if (str[i] === "UP") {
-        mage.move(new Vector2f(0, -100));
-      } else if (str[i] === "DOWN") {
-        mage.move(new Vector2f(0, 100));
-      }
-    }*/
-    /*var geval = eval;
+    await sleep(500);
     for (let i = 0; i < str.length; i++) {
+      codeBox.markLine(i);
+
+      let row = str[i].toLocaleUpperCase();
+
+      if (Commands[row]) {
+        Commands[row](mage);
+      } else {
+        alert("NE POSTOJI");
+      }
       await sleep(500);
-      let f = Function("return " + str[i]);
-      console.log(f());
-    }*/
+      codeBox.unmarkLine(i);
+    }
   })
 
   renderer.gameLoop(mainGameLoop);

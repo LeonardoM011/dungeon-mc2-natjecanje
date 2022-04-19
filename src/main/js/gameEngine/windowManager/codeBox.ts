@@ -23,6 +23,19 @@ export class CodeBox {
         this.callback = fn;
     }
 
+    public markLine(line : number) {
+        this.editor.addLineClass(line, "wrap", "mark");
+    }
+
+    public unmarkLine(line : number) {
+        this.editor.removeLineClass(line, "wrap", "mark");
+    }
+
+    /** TODO: REMOVE THIS FUNCTION */
+    get CodeMirror() {
+        return this.editor;
+    }
+
     private onCompile() {
         this.callback();
     }
