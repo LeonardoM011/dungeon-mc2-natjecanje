@@ -24,11 +24,16 @@ export class CodeBox {
     }
 
     public markLine(line : number) {
-        this.editor.addLineClass(line, "wrap", "mark");
+        this.editor.addLineClass(line, "wrap", "markline");
+    }
+
+    public markErrorLine(line : number) {
+        this.editor.addLineClass(line, "wrap", "markerror");
     }
 
     public unmarkLine(line : number) {
-        this.editor.removeLineClass(line, "wrap", "mark");
+        this.editor.removeLineClass(line, "wrap"/*, "markline"*/);
+        //this.editor.removeLineClass(line, "wrap", "markerror");
     }
 
     /** TODO: REMOVE THIS FUNCTION */

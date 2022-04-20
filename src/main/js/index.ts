@@ -7,19 +7,15 @@ import { Vector2f } from './gameEngine/math/vector';
 import { Tilemap } from './gameEngine/objectManager/tilemap';
 import { Input } from './gameEngine/inputManager/input';
 import { sleep } from './gameEngine/utils/utils';
-import * as Acorn from 'acorn';
-import * as PIXI from 'pixi.js';
 import { CodeBox } from './gameEngine/windowManager/codeBox';
 import { MagePlayer } from './players/magePlayer';
-import { Commands } from './languageSystem/Commands';
-import * as CodeMirror from 'codemirror';
+import { Commands } from './languageSystem/commands';
+import { SwampMonster } from './npcs/swampMonster';
 
 let renderer = new Renderer(0x422800, 0, 300);
 let codeBox = new CodeBox();
 
 let input = new Input(renderer);
-
-let grass : Sprite[] = [];
 
 let textureLoader = new TextureLoader();
 
@@ -29,9 +25,11 @@ let textureLoader = new TextureLoader();
 //---------
 let tilemap : Tilemap;
 let mage : MagePlayer;
+let swampMonster : SwampMonster;
 
 textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 textureLoader.addTexture("img/test/mage.png");
+textureLoader.addTexture("img/test/swampMonster.png");
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
   tilemap = new Tilemap("img/test/mapa1.tmx", sheet, new Vector2f(renderer.width / 2, renderer.height / 2));
@@ -41,28 +39,40 @@ textureLoader.load((texture : Texture[][]) => {
   let mageTexture = texture[1][0];
   mage = new MagePlayer(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
   mage.setScale(new Vector2f(2.7, 2.7));
-
   renderer.renderSprite(mage);
 
-
+  let swampMonsterTexture = texture[2][0];
+  swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(renderer.width / 2, renderer.height / 2 - 200));
+  swampMonster.setScale(new Vector2f(2.7, 2.7));
+  renderer.renderSprite(swampMonster);
 });
 
 textureLoader.after(() => {
+  
+
   // COMPILER
   codeBox.addCompileCallback(async () => {
     let str = codeBox.getContents().split("\n");
 
+    // TODO: RESET SCENE
     //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
     await sleep(500);
     for (let i = 0; i < str.length; i++) {
-      codeBox.markLine(i);
+      
 
       let row = str[i].toLocaleUpperCase();
 
       if (Commands[row]) {
-        Commands[row](mage);
+        Commands[row](mage, swampMonster);
+        codeBox.markLine(i);
       } else {
-        alert("NE POSTOJI");
+        // ERROR IN LINE
+        console.log("NE POSTOJI");
+        codeBox.markErrorLine(i);
+        await sleep(2000);
+        codeBox.unmarkLine(i);
+        break;
+        // ------------
       }
       await sleep(500);
       codeBox.unmarkLine(i);
@@ -73,11 +83,6 @@ textureLoader.after(() => {
 });
 
 function mainGameLoop(delta : number) : void {
-
-  // TEST
-  
-  // ----
-
 
   interactiveMap(delta);
 }
