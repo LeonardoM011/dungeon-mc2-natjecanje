@@ -130,6 +130,10 @@ export class Renderer {
         this.pixiRenderer.render(this.stage);
     }
 
+    get deltaTime() : number {
+        return this.ticker.deltaTime;
+    }
+
     /** Returns window width in pixels */
     get width() : number {
         return this.windowWidth;

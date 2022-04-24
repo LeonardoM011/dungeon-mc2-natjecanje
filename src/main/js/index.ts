@@ -12,6 +12,8 @@ import { MagePlayer } from './players/magePlayer';
 import { SwampMonster } from './npcs/swampMonster';
 import * as PIXI from 'pixi.js'
 import { CommandsManager } from './languageSystem/commandsManager';
+import { Bullet } from './objects/bullet';
+import { Interpreter } from './languageSystem/interpreter';
 
 let renderer = new Renderer(0x422800, 0, 300);
 let codeBox = new CodeBox();
@@ -30,10 +32,15 @@ let centerY = renderer.height / 2;
 let tilemap : Tilemap;
 let mage : MagePlayer;
 let swampMonster : SwampMonster;
+let mageProjectileTexture : Texture;
+let mageProjectile : Bullet[] = [];
+
+let interpreter = new Interpreter();
 
 textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 textureLoader.addTexture("img/test/mage.png");
 textureLoader.addTexture("img/test/swampMonster.png");
+textureLoader.addTexture("img/test/mage_attack.png");
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
   tilemap = new Tilemap("img/test/mapa1.tmx", sheet, new Vector2f(renderer.width / 2, renderer.height / 2));
@@ -49,25 +56,27 @@ textureLoader.load((texture : Texture[][]) => {
   swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(renderer.width / 2, renderer.height / 2 - 200));
   swampMonster.setScale(new Vector2f(2.7, 2.7));
   renderer.renderSprite(swampMonster, 'character');
+
+  mageProjectileTexture = texture[3][0];
 });
-
-let linija = new PIXI.Graphics();
-linija.beginFill(0xFF0000);
-linija.drawRect(centerX - 50, centerY - 50, 100, 100);
-linija.endFill();
-linija.zIndex = 100;
-let cont = new PIXI.Container();
-cont.addChild(linija);
-renderer.renderContainer(cont, 'front');
-
+ 
 textureLoader.after(() => {
   // INTERPRETER
-  codeBox.addCompileCallback(async () => { interpretLanguage(); });
+  codeBox.addCompileCallback(async () => { interpretCommands(); });
 
   renderer.gameLoop(mainGameLoop);
 });
 
 function mainGameLoop(delta : number) : void {
+  /*interpretCommands();
+  interpreter.interpret(codeBox.getContents());*/
+
+  mageProjectile.forEach(e => {
+    e.update(delta);
+    if(e.doesCollideWith(swampMonster)) {
+      alert("COLLISION");
+    }
+  });
 
   interactiveMap(delta);
 }
@@ -93,35 +102,52 @@ function interactiveMap(delta : number) : void {
   // ---------------------
 }
 
+let commands : { [key: string]: Function } = {
+  'LIJEVO': () => { mage.move(new Vector2f(-50, 0)); },
+  'DESNO': () => { mage.move(new Vector2f(50, 0)); },
+  'GORE': () => { mage.move(new Vector2f(0, -50)); },
+  'DOLJE': () => { mage.move(new Vector2f(0, 50)); },
+  // TODO: REWORK WITH ARGUMENTS
+  'NAPADNI CUDOVISTE': () => { 
+    //mage.attack(swampMonster);
+    let bullet = new Bullet(mageProjectileTexture, mage.pos, new Vector2f(0, -3));
+    bullet.setScale(new Vector2f(2.7, 2.7));
+    renderer.renderSprite(bullet, "front");
+    mageProjectile.push(bullet);
+  },
+  '': () => {},
+};
 
-
-async function interpretLanguage() {
+async function interpretCommands() {
+  //if(!interpreter.running) return;
+  //interpreter.interpret(codeBox.getContents());
   let str = codeBox.getContents().split("\n");
-
-
-  let cm = new CommandsManager(mage, swampMonster);
 
   // TODO: RESET SCENE
   //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
   await sleep(500);
   for (let i = 0; i < str.length; i++) {
-    
-
+      
     let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
 
-    if (cm.commands[row]) {
-      cm.commands[row]();
-      codeBox.markLine(i);
-    } else {
+      if (commands[row]) {
+        commands[row]();
+        codeBox.markLine(i);
+      } else {
       // ERROR IN LINE
-      console.log("NE POSTOJI");
-      codeBox.markErrorLine(i);
-      await sleep(2000);
-      codeBox.unmarkLine(i);
+        console.log("NE POSTOJI");
+        codeBox.markErrorLine(i);
+        await sleep(2000);
+        codeBox.unmarkLine(i);
       break;
-      // ------------
+    // ------------
     }
     await sleep(500);
     codeBox.unmarkLine(i);
   }
 }
+
+
+/*async function interpretLanguage() {
+  
+}*/

@@ -38,6 +38,21 @@ export class Sprite {
         this.pixiSprite.y = value.y;
     }
 
+    public doesCollideWith(sprite : Sprite) : boolean {
+            // RIGHT SIDE
+        if (((this.pos.x + this.width / 2 > sprite.pos.x - sprite.width / 2 && this.pos.x + this.width / 2 < sprite.pos.x + sprite.width / 2) ||
+            // LEFT SIDE
+            (this.pos.x - this.width / 2 < sprite.pos.x + sprite.width / 2 && this.pos.x - this.width / 2 > sprite.pos.x - sprite.width / 2)) &&
+            // UP SIDE
+            ((this.pos.y + this.height / 2 > sprite.pos.y - sprite.height / 2 && this.pos.y + this.height / 2 < sprite.pos.y + sprite.height / 2) ||
+            // DOWN SIDE
+            (this.pos.y - this.height / 2 < sprite.pos.y + sprite.height / 2 && this.pos.y - this.height / 2 > sprite.pos.y - sprite.height / 2)))
+            
+            return true;
+
+        return false;
+    }
+
     /**
      * Set position X of a sprite
      * @param value number to set positon X, 0 is LEFT
@@ -62,6 +77,14 @@ export class Sprite {
     /** Returns current position, 0,0 is top left */
     get pos() : Vector2f {
         return new Vector2f(this.pixiSprite.x, this.pixiSprite.y);
+    }
+
+    get width() : number {
+        return this.pixiSprite.width;
+    }
+
+    get height() : number {
+        return this.pixiSprite.height;
     }
 
     /** Get pixi.sprite, don't use if you don't know what you are doing */
