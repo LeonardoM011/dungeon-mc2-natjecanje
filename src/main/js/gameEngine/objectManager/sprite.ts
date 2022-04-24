@@ -14,6 +14,9 @@ export class Sprite {
         this.pixiSprite = new PIXI.Sprite(texture.texture);
         this.pixiSprite.x = pos.x;
         this.pixiSprite.y = pos.y;
+
+        this.pixiSprite.pivot.x = 0.5 * this.pixiSprite.width;
+        this.pixiSprite.pivot.y = 0.5 * this.pixiSprite.height;
     }
 
     /** 
