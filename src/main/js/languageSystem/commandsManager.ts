@@ -6,28 +6,26 @@ import { Player } from "../players/player";
 
 export class CommandsManager {
 
-    constructor(player : Player, swampMonster : SwampMonster, renderer : Renderer) {
-        this.player = player;
+    constructor(swampMonster : SwampMonster, renderer : Renderer) {
         this.swampMonster = swampMonster;
     }
 
     public commands : { [key: string]: Function } =
     {
-        'LIJEVO': () => { this.player.move(new Vector2f(-50, 0)); },
-        'DESNO': () => { this.player.move(new Vector2f(50, 0)); },
-        'GORE': () => { this.player.move(new Vector2f(0, -50)); },
-        'DOLJE': () => { this.player.move(new Vector2f(0, 50)); },
+        'LIJEVO': (player : Player) => { player.move(new Vector2f(-50, 0)); },
+        'DESNO': (player : Player) => { player.move(new Vector2f(50, 0)); },
+        'GORE': (player : Player) => { player.move(new Vector2f(0, -50)); },
+        'DOLJE': (player : Player) => { player.move(new Vector2f(0, 50)); },
         // TODO: REWORK WITH ARGUMENTS
-        'NAPADNI CUDOVISTE': () => { 
-            this.player.attack(this.swampMonster); 
+        'NAPADNI CUDOVISTE': (player : Player) => { 
+            //this.player.attack(this.swampMonster); 
         
         },
 
 
         
-        '': () => {},
+        '': (player : Player) => {},
     };
 
-    private player : Player;
     private swampMonster : SwampMonster;
 };

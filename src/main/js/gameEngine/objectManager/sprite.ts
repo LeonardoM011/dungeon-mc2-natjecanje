@@ -4,7 +4,6 @@ import { Vector2f } from '../math/vector';
 
 /** Abstraction class for PIXI.Sprite */
 export class Sprite {
-    // 
     /**
      * Initialize with Texture and position of Vector2f on the stage
      * @param texture single texture object

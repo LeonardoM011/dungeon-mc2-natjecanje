@@ -6,10 +6,38 @@ export class Vector2f {
         this._y = y;
     }
 
-    public reverse() : Vector2f {
-        this._x = -this._x;
-        this._y = -this._y;
-        return this;
+    public multiplyVal(val : number) : Vector2f {
+        return new Vector2f(this._x * val, this._y * val);
+    }
+
+    public multiplyVec(vec : Vector2f) : Vector2f {
+        return new Vector2f(this._x * vec.x, this._y * vec.y);
+    }
+
+    public addVal(val : number) : Vector2f {
+        return new Vector2f(this._x + val, this._y + val);
+    }
+
+    public addVec(vec : Vector2f) : Vector2f {
+        return new Vector2f(this._x + vec.x, this._y + vec.y);
+    }
+
+    /*public multiplyVec(vec : Vector2f) : Vector2f {
+        this._x *= val;
+        this._y *= val;
+        return new Vector2f(this._x * val, this._y * val);
+    }*/
+
+    /*public divideVal(val : number) : Vector2f {
+        return new Vector2f()
+    }*/
+
+    public length() : number {
+        return Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2));
+    }
+
+    public normalize() : Vector2f {
+        return new Vector2f(this._x / this.length(), this._y / this.length());
     }
 
     /** Get first value of vector */

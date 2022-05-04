@@ -3,6 +3,7 @@ import { Input } from '../inputManager/input';
 import { Tilemap } from '../objectManager/tilemap';
 import { Vector2f } from '../math/vector';
 import { Sprite } from '../objectManager/sprite';
+import { AnimatedSprite } from '../objectManager/animatedSprite';
 
 export class Renderer {
     
@@ -86,6 +87,14 @@ export class Renderer {
             this.layers[layer].addChild(tilemap.container);
         } else {
             this.layers.default.addChild(tilemap.container);
+        }
+    }
+
+    public renderAnimSprite(animatedSprite : AnimatedSprite, layer? : string) : void {
+        if (typeof layer !== 'undefined') {
+            this.layers[layer].addChild(animatedSprite.animatedSprite);
+        } else {
+            this.layers.default.addChild(animatedSprite.animatedSprite);
         }
     }
 

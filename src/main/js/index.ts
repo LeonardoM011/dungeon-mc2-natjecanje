@@ -14,6 +14,9 @@ import * as PIXI from 'pixi.js'
 import { CommandsManager } from './languageSystem/commandsManager';
 import { Bullet } from './objects/bullet';
 import { Interpreter } from './languageSystem/interpreter';
+import { AnimatedSprite } from './gameEngine/objectManager/animatedSprite';
+import { HealthBar } from './objects/healthBar';
+import { Player } from './players/player';
 
 let renderer = new Renderer(0x422800, 0, 300);
 let codeBox = new CodeBox();
@@ -34,30 +37,53 @@ let mage : MagePlayer;
 let swampMonster : SwampMonster;
 let mageProjectileTexture : Texture;
 let mageProjectile : Bullet[] = [];
+let mageProjExplTex : Texture[] = [];
+
+let mageProjExpl : AnimatedSprite;
 
 let interpreter = new Interpreter();
 
 textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
 textureLoader.addTexture("img/test/mage.png");
 textureLoader.addTexture("img/test/swampMonster.png");
-textureLoader.addTexture("img/test/mage_attack.png");
+textureLoader.addSheet("img/test/mage_attack_explosion.png", 48, 48, 16, 16);
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
   tilemap = new Tilemap("img/test/mapa1.tmx", sheet, new Vector2f(renderer.width / 2, renderer.height / 2));
-  tilemap.setScale(new Vector2f(2.7, 2.7));
   renderer.renderTilemap(tilemap, "tilemap");
 
   let mageTexture = texture[1][0];
-  mage = new MagePlayer(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2));
-  mage.setScale(new Vector2f(2.7, 2.7));
-  renderer.renderSprite(mage, 'character');
+  mage = new MagePlayer(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2), 100, 20);
+  renderer.renderContainer(mage, 'character');
 
   let swampMonsterTexture = texture[2][0];
-  swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(renderer.width / 2, renderer.height / 2 - 200));
-  swampMonster.setScale(new Vector2f(2.7, 2.7));
+  swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(renderer.width / 2, renderer.height / 2 - 100));
   renderer.renderSprite(swampMonster, 'character');
 
-  mageProjectileTexture = texture[3][0];
+
+  for (let i = 0; i < 8; i++) {
+    mageProjExplTex.push(texture[3][i]);
+  }
+  /*mageProjExpl = new AnimatedSprite(mageProjExplTex, new Vector2f(renderer.width / 2, renderer.height / 2), 0.25, false);
+  mageProjExpl.setScale(new Vector2f(2.7, 2.7));
+  mageProjExpl.play();
+  renderer.renderAnimSprite(mageProjExpl, "front");*/
+
+  /*mageProjExpl = new PIXI.AnimatedSprite(mageProjExplTex);
+  mageProjExpl.position.x = renderer.width / 2;
+  mageProjExpl.position.y = renderer.height / 2;
+  mageProjExpl.scale.x = 2.7;
+  mageProjExpl.scale.y = 2.7;
+  
+  mageProjExpl.animationSpeed = 0.3;
+  mageProjExpl.play();
+  mageProjExpl.loop = false;
+
+  let test = new PIXI.Container();
+  test.addChild(mageProjExpl);
+  renderer.renderContainer(test, 'front');*/
+
+  renderer.scaleStage(new Vector2f(1.4, 1.4));
 });
  
 textureLoader.after(() => {
@@ -67,19 +93,26 @@ textureLoader.after(() => {
   renderer.gameLoop(mainGameLoop);
 });
 
+
+//let healthBar = new HealthBar(new Vector2f(centerX, centerY), 500, 500);
+//renderer.renderContainer(healthBar);
+
+
 function mainGameLoop(delta : number) : void {
   /*interpretCommands();
   interpreter.interpret(codeBox.getContents());*/
 
   mageProjectile.forEach(e => {
-    e.update(delta);
-    if(e.doesCollideWith(swampMonster)) {
-      alert("COLLISION");
+    if(e.doesCollideWithSprite(swampMonster)) {
+      e.play();
+    } else {
+      e.updatePos(delta);
     }
   });
 
   interactiveMap(delta);
 }
+
 
 let lastPos = new Vector2f(0, 0);
 /**
@@ -108,14 +141,21 @@ let commands : { [key: string]: Function } = {
   'GORE': () => { mage.move(new Vector2f(0, -50)); },
   'DOLJE': () => { mage.move(new Vector2f(0, 50)); },
   // TODO: REWORK WITH ARGUMENTS
-  'NAPADNI CUDOVISTE': () => { 
+  'NAPADNI CUDOVISTE': () => {
+    /*let mX = mage.pos.x;
+    let mY = mage.pos.y;
+    let sX = swampMonster.pos.x;
+    let sY = swampMonster.pos.y;
+    let velVector = new Vector2f(sX - mX, sY - mY);
+    velVector = velVector.normalize();
+    velVector = velVector.multiplyVal(2);
     //mage.attack(swampMonster);
-    let bullet = new Bullet(mageProjectileTexture, mage.pos, new Vector2f(0, -3));
+    let bullet = new Bullet(mageProjExplTex, mage.pos, 0.3, velVector);
     bullet.setScale(new Vector2f(2.7, 2.7));
-    renderer.renderSprite(bullet, "front");
-    mageProjectile.push(bullet);
+    renderer.renderAnimSprite(bullet, "front");
+    mageProjectile.push(bullet);*/
   },
-  '': () => {},
+  '': () => { },
 };
 
 async function interpretCommands() {
@@ -128,7 +168,8 @@ async function interpretCommands() {
   await sleep(500);
   for (let i = 0; i < str.length; i++) {
       
-    let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
+    //let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
+    let row = str[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
 
       if (commands[row]) {
         commands[row]();
