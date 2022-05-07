@@ -35,14 +35,14 @@ let mageProjExplTex : Texture[] = [];
 
 let mageProjExpl : AnimatedSprite;
 
-textureLoader.addSheet("src/tilesets/tileset.png", 256, 256, 16, 16);
-textureLoader.addSheet("src/animatedSprites/mage_attack_explosion.png", 48, 48, 16, 16);
+textureLoader.addSheet("src/tilesets/overworld_tileset_grass.png", 16, 16);
+textureLoader.addSheet("src/animatedSprites/mage_attack_explosion.png", 16, 16);
 textureLoader.addTexture("src/sprites/mage.png");
 textureLoader.addTexture("src/sprites/swampMonster.png");
 
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
-  tilemap = new Tilemap("src/tilemaps/map.tmx", sheet, new Vector2f(centerX, centerY));
+  tilemap = new Tilemap("src/tilemaps/map_grass.tmx", sheet, new Vector2f(centerX, centerY));
   renderer.renderTilemap(tilemap, "tilemap");
 
   for (let i = 0; i < 8; i++) {

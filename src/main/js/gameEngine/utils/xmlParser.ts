@@ -22,8 +22,22 @@ export class XMLParser {
      * @param tag specified XML tag
      * @returns string of all tag contents
      */
-    public tagContents(tag : string) : string {
+    public tagContents(tag : string, num? : number) : string {
+        // If num is specified return that tag in a row
+        if (typeof num !== 'undefined')
+            return this.xmlDoc.getElementsByTagName(tag)[num].childNodes[0].nodeValue;
+
+        // Else return first tag
         return this.xmlDoc.getElementsByTagName(tag)[0].childNodes[0].nodeValue;
+    }
+
+    public allTagContents(tag : string) : string[] {
+        let cont = this.xmlDoc.getElementsByTagName(tag);
+        let str : string[] = [];
+        for (let i = 0; i < cont.length; i++) {
+            str.push(cont[i].childNodes[0].nodeValue);
+        }
+        return str;
     }
 
     /**

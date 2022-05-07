@@ -3,7 +3,7 @@ import * as PIXI from 'pixi.js';
 import { Mat2f } from '../math/mat';
 import { Texture } from '../objectManager/texture';
 
-type Sheet = { path : string, imageWidth? : number, imageHeight? : number, tileWidth? : number, tileHeight? : number };
+type Sheet = { path : string, tileWidth? : number, tileHeight? : number };
 
 // TODO REWORK ALL THIS TO USE ONLY 1 LOADER
 export class TextureLoader {
@@ -12,6 +12,9 @@ export class TextureLoader {
         this.loader = new PIXI.Loader();
 
         this.sheets = [];
+
+        // Throw error on texture failed to load
+        this.loader.onError.add((err) => { this.error(err); });
     }
 
     public addTexture(path : string) : void {
@@ -19,9 +22,9 @@ export class TextureLoader {
         this.sheets.push({ path: path });
     }
 
-    public addSheet(path : string, imageWidth : number, imageHeight : number, tileWidth : number, tileHeight : number) {
+    public addSheet(path : string, tileWidth : number, tileHeight : number) {
         this.loader.add(path);
-        this.sheets.push({ path: path, imageWidth : imageWidth, imageHeight : imageHeight, tileWidth : tileWidth, tileHeight : tileHeight });
+        this.sheets.push({ path: path, tileWidth : tileWidth, tileHeight : tileHeight });
     }
 
     public load(fn : Function) : void {
@@ -53,8 +56,8 @@ export class TextureLoader {
     private loadSheet(texture : PIXI.Texture, sheetInfo : Sheet) {
         let textures : Texture[] = [];
 
-        let imageWidth = sheetInfo.imageWidth;
-        let imageHeight = sheetInfo.imageHeight;
+        let imageWidth = texture.width;
+        let imageHeight = texture.height;
         let tileWidth = sheetInfo.tileWidth;
         let tileHeight = sheetInfo.tileHeight;
 
@@ -67,8 +70,9 @@ export class TextureLoader {
         return textures;
     }
 
-    private error() {
-
+    private error(err : Error) {
+        alert(err.message);
+        console.log(err.message);
     }
 
     protected loader : PIXI.Loader;

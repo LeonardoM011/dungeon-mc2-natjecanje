@@ -8,7 +8,7 @@ export type TileMapInfo = {
     tileWidth? : number,
     tileHeight? : number,
     tileSetSource? : string,
-    data? : number[][]
+    data? : number[][][]
 };
 
 /**
@@ -31,20 +31,32 @@ export function TiledParser(path : string) : TileMapInfo {
 
     tileMapInfo.tileSetSource = xmlMap.tagArgument("tileset", "source");
 
+    tileMapInfo.data = [];
+
     // Turning data string into 2d array
-    let xmlData = xmlMap.tagContents("data");
-    // filter(Boolean) just ignores empty string/null value
-    let splitXmlData = xmlData.split('\n').filter(Boolean);
+    let xmlData = xmlMap.allTagContents("data");
+    for (let i = 0; i < xmlData.length; i++) {
+        // filter(Boolean) just ignores empty string/null value
+        let splitXmlData = xmlData[i].split('\n').filter(Boolean);
+        let dataRow = processData(splitXmlData, tileMapInfo);
+        tileMapInfo.data.push(dataRow);
+    }
+
+    return tileMapInfo;
+}
+
+function processData(str : string[], mapInfo : TileMapInfo) : number[][] {
+    let width = mapInfo.width;
+    let height = mapInfo.height;
+
     // Create empty 2d array
     let data : number[][] = [...Array(height)].map(e => Array(width));
     for (let i = 0; i < height; i++) {
         // filter(Boolean) just ignores empty string/null value
-        let tmp = splitXmlData[i].split(',').filter(Boolean);
+        let tmp = str[i].split(',').filter(Boolean);
         for (let j = 0; j < width; j++) {
             data[i][j] = Number(tmp[j]);
         }
     }
-    tileMapInfo.data = data;
-
-    return tileMapInfo;
+    return data;
 }
