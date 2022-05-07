@@ -1,5 +1,0 @@
-//import 'codemirror.css';
-import * as CodeMirror from 'codemirror';
-
-
-//var myCodeMirror = CodeMirror(document.body);

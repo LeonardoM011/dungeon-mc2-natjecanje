@@ -20,7 +20,7 @@ export abstract class Player extends PIXI.Container {
 
     public abstract move(direction : Vector2f) : void;
 
-    public abstract attack() : void;
+    public abstract attack(boss : Boss) : void;
 
     protected sprite : Sprite;
     protected health : number;

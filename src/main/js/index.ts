@@ -11,14 +11,13 @@ import { CodeBox } from './gameEngine/windowManager/codeBox';
 import { MagePlayer } from './players/magePlayer';
 import { SwampMonster } from './npcs/swampMonster';
 import * as PIXI from 'pixi.js'
-import { CommandsManager } from './languageSystem/commandsManager';
+import { Commands } from './languageSystem/commands';
 import { Bullet } from './objects/bullet';
-import { Interpreter } from './languageSystem/interpreter';
 import { AnimatedSprite } from './gameEngine/objectManager/animatedSprite';
 import { HealthBar } from './objects/healthBar';
 import { Player } from './players/player';
 
-let renderer = new Renderer(0x422800, 0, 300);
+let renderer = new Renderer(0x476930, 0, 300);
 let codeBox = new CodeBox();
 
 let input = new Input(renderer);
@@ -28,62 +27,38 @@ let textureLoader = new TextureLoader();
 let centerX = renderer.width / 2;
 let centerY = renderer.height / 2;
 
-// TEST
-//let xml : TileMapInfo = TiledParser("tilemaps/mapa.tmx");
-//console.log(xml.data);
-//---------
 let tilemap : Tilemap;
 let mage : MagePlayer;
 let swampMonster : SwampMonster;
-let mageProjectileTexture : Texture;
 let mageProjectile : Bullet[] = [];
 let mageProjExplTex : Texture[] = [];
 
 let mageProjExpl : AnimatedSprite;
 
-let interpreter = new Interpreter();
+textureLoader.addSheet("src/tilesets/tileset.png", 256, 256, 16, 16);
+textureLoader.addSheet("src/animatedSprites/mage_attack_explosion.png", 48, 48, 16, 16);
+textureLoader.addTexture("src/sprites/mage.png");
+textureLoader.addTexture("src/sprites/swampMonster.png");
 
-textureLoader.addSheet("img/test/0x72_16x16DungeonTileset.v4.png", 256, 256, 16, 16);
-textureLoader.addTexture("img/test/mage.png");
-textureLoader.addTexture("img/test/swampMonster.png");
-textureLoader.addSheet("img/test/mage_attack_explosion.png", 48, 48, 16, 16);
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
-  tilemap = new Tilemap("img/test/mapa1.tmx", sheet, new Vector2f(renderer.width / 2, renderer.height / 2));
+  tilemap = new Tilemap("src/tilemaps/map.tmx", sheet, new Vector2f(centerX, centerY));
   renderer.renderTilemap(tilemap, "tilemap");
 
-  let mageTexture = texture[1][0];
-  mage = new MagePlayer(mageTexture, new Vector2f(renderer.width / 2, renderer.height / 2), 100, 20);
+  for (let i = 0; i < 8; i++) {
+    mageProjExplTex.push(texture[1][i]);
+  }
+
+  let mageTexture = texture[2][0];
+  mage = new MagePlayer(mageTexture, new Vector2f(centerX, centerY), 100, 20, mageProjExplTex);
   renderer.renderContainer(mage, 'character');
 
-  let swampMonsterTexture = texture[2][0];
-  swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(renderer.width / 2, renderer.height / 2 - 100));
+  let swampMonsterTexture = texture[3][0];
+  swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(centerX, centerY - 100));
   renderer.renderSprite(swampMonster, 'character');
 
-
-  for (let i = 0; i < 8; i++) {
-    mageProjExplTex.push(texture[3][i]);
-  }
-  /*mageProjExpl = new AnimatedSprite(mageProjExplTex, new Vector2f(renderer.width / 2, renderer.height / 2), 0.25, false);
-  mageProjExpl.setScale(new Vector2f(2.7, 2.7));
-  mageProjExpl.play();
-  renderer.renderAnimSprite(mageProjExpl, "front");*/
-
-  /*mageProjExpl = new PIXI.AnimatedSprite(mageProjExplTex);
-  mageProjExpl.position.x = renderer.width / 2;
-  mageProjExpl.position.y = renderer.height / 2;
-  mageProjExpl.scale.x = 2.7;
-  mageProjExpl.scale.y = 2.7;
-  
-  mageProjExpl.animationSpeed = 0.3;
-  mageProjExpl.play();
-  mageProjExpl.loop = false;
-
-  let test = new PIXI.Container();
-  test.addChild(mageProjExpl);
-  renderer.renderContainer(test, 'front');*/
-
-  renderer.scaleStage(new Vector2f(1.4, 1.4));
+  // Start zoomed in
+  renderer.scaleStage(new Vector2f(1.2, 1.2));
 });
  
 textureLoader.after(() => {
@@ -130,12 +105,12 @@ function interactiveMap(delta : number) : void {
   // ----------------------
   // Scroll to zoom in/out
   if (input.getWheelDirection()) {
-    renderer.scaleStage(new Vector2f(-input.getWheelDirection() / 125, -input.getWheelDirection() / 125));
+    renderer.scaleStage(new Vector2f(-input.getWheelDirection() / Math.abs(input.getWheelDirection() / 0.01)));
   }
   // ---------------------
 }
 
-let commands : { [key: string]: Function } = {
+/*let commands : { [key: string]: Function } = {
   'LIJEVO': () => { mage.move(new Vector2f(-50, 0)); },
   'DESNO': () => { mage.move(new Vector2f(50, 0)); },
   'GORE': () => { mage.move(new Vector2f(0, -50)); },
@@ -154,9 +129,10 @@ let commands : { [key: string]: Function } = {
     bullet.setScale(new Vector2f(2.7, 2.7));
     renderer.renderAnimSprite(bullet, "front");
     mageProjectile.push(bullet);*/
-  },
+  /*},
   '': () => { },
-};
+};*/
+
 
 async function interpretCommands() {
   //if(!interpreter.running) return;
@@ -170,9 +146,9 @@ async function interpretCommands() {
       
     //let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
     let row = str[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
-
-      if (commands[row]) {
-        commands[row]();
+      
+      if (Commands[row]) {
+        Commands[row]();
         codeBox.markLine(i);
       } else {
       // ERROR IN LINE

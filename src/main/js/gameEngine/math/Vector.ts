@@ -1,9 +1,16 @@
 /** Vector2f class for holding a pair of numbers */
 export class Vector2f {
-    /** Initializes with 2 numbers */
-    constructor(x : number, y : number) {
-        this._x = x;
-        this._y = y;
+    /** Initializes with 2 numbers, if x and y are the same only give 1 argument */
+    constructor(x : number, y? : number) {
+        if (typeof y !== 'undefined') {
+            // If 2 arguments are given set x and y normally
+            this._x = x;
+            this._y = y;
+        } else {
+            // If only 1 argument is given assume x and y are equal
+            this._x = x;
+            this._y = x;
+        }
     }
 
     public multiplyVal(val : number) : Vector2f {
@@ -14,6 +21,14 @@ export class Vector2f {
         return new Vector2f(this._x * vec.x, this._y * vec.y);
     }
 
+    public divideVal(val : number) : Vector2f {
+        return new Vector2f(this._x / val, this._y / val);
+    }
+
+    public divideVec(vec : Vector2f) : Vector2f {
+        return new Vector2f(this._x / vec.x, this._y / vec.y);
+    }
+
     public addVal(val : number) : Vector2f {
         return new Vector2f(this._x + val, this._y + val);
     }
@@ -22,18 +37,20 @@ export class Vector2f {
         return new Vector2f(this._x + vec.x, this._y + vec.y);
     }
 
-    /*public multiplyVec(vec : Vector2f) : Vector2f {
-        this._x *= val;
-        this._y *= val;
-        return new Vector2f(this._x * val, this._y * val);
-    }*/
+    public subtractVal(val : number) : Vector2f {
+        return new Vector2f(this._x - val, this._y - val);
+    }
 
-    /*public divideVal(val : number) : Vector2f {
-        return new Vector2f()
-    }*/
+    public subtractVec(vec : Vector2f) : Vector2f {
+        return new Vector2f(this._x - vec.x, this._y - vec.y);
+    }
 
     public length() : number {
         return Math.sqrt(Math.pow(this._x, 2) + Math.pow(this._y, 2));
+    }
+
+    public negative() : Vector2f {
+        return new Vector2f(-this._x, -this._y);
     }
 
     public normalize() : Vector2f {
