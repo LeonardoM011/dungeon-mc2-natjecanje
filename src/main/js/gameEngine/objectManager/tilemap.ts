@@ -15,27 +15,16 @@ export class Tilemap {
      */
     constructor(tilemapPath : string, tileset : Texture[], origin : Vector2f) {
         this.spritesContainer = new PIXI.Container;
+        this.allSprites = [];
 
         let mapInfo = TiledParser(tilemapPath);
-        // Create empty 2d array with height and width
-        this.allSprites = [...Array(mapInfo.height)].map(e => Array(mapInfo.width));
+        
+        
 
-        for (let i = 0; i < mapInfo.height; i++) {
-            for (let j = 0; j < mapInfo.width; j++) {
-                // Tiled sets 0 to be empty tile and first tile on 1
-                let tileId = (mapInfo.data[i][j]) - 1;
-                // Ignore empty tile
-                if (tileId == -1) {
-                    continue;
-                }
-
-                // Create new sprite and add it to container
-                this.allSprites[i][j] = new Sprite(tileset[tileId], new Vector2f(0, 0));
-                this.allSprites[i][j].setPosX(mapInfo.tileWidth * j);
-                this.allSprites[i][j].setPosY(mapInfo.tileHeight * i);
-                this.spritesContainer.addChild(this.allSprites[i][j].sprite);
-            }
+        for (let i = 0; i < mapInfo.data.length; i++) {
+            this.processSprites(mapInfo.width, mapInfo.height, mapInfo.tileWidth, mapInfo.tileHeight, mapInfo.data[i], tileset);
         }
+
         this.spritesContainer.x = origin.x;
         this.spritesContainer.y = origin.y;
         this.spritesContainer.pivot.x = 0.5 * this.spritesContainer.width;
@@ -81,7 +70,7 @@ export class Tilemap {
     }*/
 
     /** Get sprite 2D array */
-    get sprites() : Sprite[][] {
+    get sprites() : Sprite[][][] {
         return this.allSprites;
     }
 
@@ -90,9 +79,31 @@ export class Tilemap {
         return this.spritesContainer;
     }
 
+    private processSprites(width : number, height : number, tileWidth : number, tileHeight : number, data : number[][], tileset : Texture[]) {
+        // Create empty 2d array with height and width
+        let spritesLayer = [...Array(height)].map(e => Array(width));
+
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                // Tiled sets 0 to be empty tile and first tile on 1
+                let tileId = (data[i][j]) - 1;
+                // Ignore empty tile
+                if (tileId == -1) {
+                    continue;
+                }
+
+                // Create new sprite and add it to container
+                spritesLayer[i][j] = new Sprite(tileset[tileId], new Vector2f(0, 0));
+                spritesLayer[i][j].setPosX(tileWidth * j);
+                spritesLayer[i][j].setPosY(tileHeight * i);
+                this.spritesContainer.addChild(spritesLayer[i][j].sprite);
+            }
+        }
+        this.allSprites.push(spritesLayer);
+    }
 
     //private xmlData : TileMapInfo;
-    private allSprites : Sprite[][];
+    private allSprites : Sprite[][][];
     private spritesContainer : PIXI.Container;
     private currentPos : Vector2f;
     //private mapFile : string;

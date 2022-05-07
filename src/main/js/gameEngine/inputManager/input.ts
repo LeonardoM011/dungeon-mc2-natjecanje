@@ -20,8 +20,8 @@ export class Input {
         this.inputManager = new PIXI.InteractionManager(renderer.renderer);
 
         // EVENT LISTENERS
-        renderer.canvas.addEventListener('keydown', this.onKeyDown.bind(this));
-        renderer.canvas.addEventListener('keyup', this.onKeyUp.bind(this));
+        document.addEventListener('keydown', this.onKeyDown.bind(this));
+        document.addEventListener('keyup', this.onKeyUp.bind(this));
         renderer.canvas.addEventListener('mousedown', this.onMouseDown.bind(this));
         renderer.canvas.addEventListener('mouseup', this.onMouseUp.bind(this));
         renderer.canvas.addEventListener('wheel', this.onMouseWheel.bind(this), );

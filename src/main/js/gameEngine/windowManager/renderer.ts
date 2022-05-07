@@ -3,6 +3,7 @@ import { Input } from '../inputManager/input';
 import { Tilemap } from '../objectManager/tilemap';
 import { Vector2f } from '../math/vector';
 import { Sprite } from '../objectManager/sprite';
+import { AnimatedSprite } from '../objectManager/animatedSprite';
 
 export class Renderer {
     
@@ -49,22 +50,60 @@ export class Renderer {
         this.stage.x = this.windowWidth / 2;
         this.stage.y = this.windowHeight / 2;
 
+        // layers
+        this.layers = {
+            'background': new PIXI.Container(),
+            'tilemap': new PIXI.Container(),
+            'default': new PIXI.Container(),
+            'character' : new PIXI.Container(),
+            'projectile' : new PIXI.Container(),
+            'front': new PIXI.Container(),
+        };
+
+        // Push every layer to stage
+        Object.values(this.layers).forEach(val => {
+            this.stage.addChild(val);
+        });
     }
 
     /**
      * Render sprite object
      * @param sprite sprite which you want to render
      */
-    public renderSprite(sprite : Sprite) : void {
-        this.stage.addChild(sprite.sprite);
+    public renderSprite(sprite : Sprite, layer? : string) : void {
+        if (typeof layer !== 'undefined') {
+            this.layers[layer].addChild(sprite.sprite);
+        } else {
+            this.layers.default.addChild(sprite.sprite);
+        }
     }
 
     /**
      * Render tilemap object
      * @param tilemap tilemap which you want to render
      */
-    public renderTilemap(tilemap : Tilemap) : void {
-        this.stage.addChild(tilemap.container);
+    public renderTilemap(tilemap : Tilemap, layer? : string) : void {
+        if (typeof layer !== 'undefined') {
+            this.layers[layer].addChild(tilemap.container);
+        } else {
+            this.layers.default.addChild(tilemap.container);
+        }
+    }
+
+    public renderAnimSprite(animatedSprite : AnimatedSprite, layer? : string) : void {
+        if (typeof layer !== 'undefined') {
+            this.layers[layer].addChild(animatedSprite.animatedSprite);
+        } else {
+            this.layers.default.addChild(animatedSprite.animatedSprite);
+        }
+    }
+
+    public renderContainer(container : PIXI.Container, layer? : string) : void {
+        if (typeof layer !== 'undefined') {
+            this.layers[layer].addChild(container);
+        } else {
+            this.layers.default.addChild(container);
+        }
     }
 
     public setStagePos(value : Vector2f) : void {
@@ -98,6 +137,10 @@ export class Renderer {
     private afterGameLoop() : void {
 
         this.pixiRenderer.render(this.stage);
+    }
+
+    get deltaTime() : number {
+        return this.ticker.deltaTime;
     }
 
     /** Returns window width in pixels */
@@ -140,6 +183,7 @@ export class Renderer {
     private windowHeight : number;
     private ticker : PIXI.Ticker;
     private stage : PIXI.Container;
+    private layers : { [key: string]: PIXI.Container };
     private pixiRenderer : PIXI.Renderer;
     private htmlCanvas : HTMLCanvasElement;
 }
