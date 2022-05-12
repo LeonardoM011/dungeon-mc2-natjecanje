@@ -16,9 +16,14 @@ import { Bullet } from './objects/bullet';
 import { AnimatedSprite } from './gameEngine/objectManager/animatedSprite';
 import { HealthBar } from './objects/healthBar';
 import { Player } from './players/player';
+import { CollisionBox } from './gameEngine/objectManager/collisionBox';
 
 let renderer = new Renderer(0x476930, 0, 300);
 let codeBox = new CodeBox();
+
+// Debugging purpose
+CollisionBox.showBounds(true);
+// ------------------
 
 let input = new Input(renderer);
 
@@ -30,7 +35,6 @@ let centerY = renderer.height / 2;
 let tilemap : Tilemap;
 let mage : MagePlayer;
 let swampMonster : SwampMonster;
-let mageProjectile : Bullet[] = [];
 let mageProjExplTex : Texture[] = [];
 
 let mageProjExpl : AnimatedSprite;
@@ -50,12 +54,14 @@ textureLoader.load((texture : Texture[][]) => {
   }
 
   let mageTexture = texture[2][0];
-  mage = new MagePlayer(mageTexture, new Vector2f(centerX, centerY), 100, 20, mageProjExplTex);
+  mage = new MagePlayer(mageTexture, new Vector2f(centerX, centerY + 8), 100, 20, mageProjExplTex);
+  mage.setCollison(new Vector2f(0, 0), 12, 16);
   renderer.renderContainer(mage, 'character');
 
   let swampMonsterTexture = texture[3][0];
   swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(centerX, centerY - 100));
-  renderer.renderSprite(swampMonster, 'character');
+  swampMonster.setCollison(new Vector2f(0, 0), 18, 22);
+  renderer.renderContainer(swampMonster, 'character');
 
   // Start zoomed in
   renderer.scaleStage(new Vector2f(1.2, 1.2));
@@ -74,16 +80,7 @@ textureLoader.after(() => {
 
 
 function mainGameLoop(delta : number) : void {
-  /*interpretCommands();
-  interpreter.interpret(codeBox.getContents());*/
-
-  mageProjectile.forEach(e => {
-    if(e.doesCollideWithSprite(swampMonster)) {
-      e.play();
-    } else {
-      e.updatePos(delta);
-    }
-  });
+  mage.update(delta, swampMonster);
 
   interactiveMap(delta);
 }
@@ -138,7 +135,7 @@ async function interpretCommands() {
   //if(!interpreter.running) return;
   //interpreter.interpret(codeBox.getContents());
   let str = codeBox.getContents().split("\n");
-
+  let currentLine
   // TODO: RESET SCENE
   //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
   await sleep(500);
@@ -146,25 +143,37 @@ async function interpretCommands() {
       
     //let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
     let row = str[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
-      
-      if (Commands[row]) {
-        Commands[row]();
-        codeBox.markLine(i);
-      } else {
-      // ERROR IN LINE
-        console.log("NE POSTOJI");
-        codeBox.markErrorLine(i);
-        await sleep(2000);
-        codeBox.unmarkLine(i);
+
+    let commandLine = row.split(' ');
+    let commandLineArgs = row.split(' ');
+    commandLineArgs.shift();
+
+    if (Commands[commandLine[0]]) {
+      let status = Commands[commandLine[0]]({
+        renderer: renderer,
+        player: mage,
+        monster: swampMonster,
+        args: commandLineArgs
+      });
+
+      if (status != 0) {
+        errorLine(i);
+        break;
+      }
+
+      codeBox.markLine(i);
+    } else {
+      errorLine(i);
       break;
-    // ------------
     }
     await sleep(500);
     codeBox.unmarkLine(i);
   }
 }
 
-
-/*async function interpretLanguage() {
-  
-}*/
+async function errorLine(lineNum : number) {
+  console.log("NE POSTOJI");
+  codeBox.markErrorLine(lineNum);
+  await sleep(2000);
+  codeBox.unmarkLine(lineNum);
+}

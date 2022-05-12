@@ -1,5 +1,6 @@
 import { Vector2f } from "../gameEngine/math/vector";
 import { Renderer } from "../gameEngine/windowManager/renderer";
+import { Boss } from "../npcs/boss";
 import { SwampMonster } from "../npcs/swampMonster";
 import { Player } from "../players/player";
 
@@ -18,56 +19,40 @@ import { Player } from "../players/player";
     mageProjectile.push(bullet);
 }*/
 
-export type objects = {
-    num1 : number,
-    num2 : number
 
-}
-
-//let  = objects.renderer;
-
-
+export type commandArgs = {
+    renderer : Renderer,
+    player : Player,
+    monster : Boss,
+    args? : string[]
+};
 
 export let Commands : { [key: string]: Function } = {
 
-    'LIJEVO': (...args : any[]) : number => {
-        let renderer : Renderer = args[0];
-        let player : Player = args[1];
-        player.move(new Vector2f(-50, 0)); 
+    'LIJEVO': (args : commandArgs) : number => {
+        args.player.move(new Vector2f(-16, 0)); 
         return 0;
     },
-    'DESNO': (...args : any[]) : number => { 
-        let renderer : Renderer = args[0];
-        let player : Player = args[1];
-        player.move(new Vector2f(50, 0)); 
+    'DESNO': (args : commandArgs) : number => { 
+        args.player.move(new Vector2f(16, 0)); 
         return 0;
     },
-    'GORE': (...args : any[]) : number => { 
-        let renderer : Renderer = args[0];
-        let player : Player = args[1];
-        player.move(new Vector2f(0, -50)); 
+    'GORE': (args : commandArgs) : number => { 
+        args.player.move(new Vector2f(0, -16)); 
         return 0;
     },
-    'DOLJE': (...args : any[]) : number => { 
-        let renderer : Renderer = args[0];
-        let player : Player = args[1];
-        player.move(new Vector2f(0, 50)); 
+    'DOLJE': (args : commandArgs) : number => { 
+        args.player.move(new Vector2f(0, 16)); 
         return 0;
     },
     // TODO: REWORK WITH ARGUMENTS
-    'NAPADNI': (...args : any[]) : number => {
-        let renderer : Renderer = args[0];
-        let player : Player = args[1];
-        let swampCoords : Vector2f = args[2];
-        let monster : string = args[3];
+    'NAPADNI': (args : commandArgs) : number => {
         // If monster isn't specified return error
-        if (monster !== "CUDOVISTE" && monster !== "ČUDOVISTE") {
+        if (!(args.args[0] === "CUDOVISTE" || args.args[0] === "ČUDOVIŠTE"))
             return -1;
-        }
 
-
-
+        args.player.attack(args.renderer, args.monster);
         return 0;
     },
-    '': (...args : any[]) : number => { return 0; },
+    '': (args : commandArgs) : number => { return 0; },
 };
