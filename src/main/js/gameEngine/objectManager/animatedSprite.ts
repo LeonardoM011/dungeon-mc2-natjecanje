@@ -58,6 +58,15 @@ export class AnimatedSprite {
         this.pixiSprite.y += value.y;
     }
 
+    public setTextures(textures : Texture[]) {
+        let pixiTextures : PIXI.Texture[] = [];
+        textures.forEach(e => {
+            pixiTextures.push(e.texture);
+        });
+
+        this.pixiSprite.textures = pixiTextures;
+    }
+
     /**
      * Set sprite position,
      * @param value vector position, 0,0 is top left

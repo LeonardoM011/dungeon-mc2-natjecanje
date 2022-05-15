@@ -22,7 +22,7 @@ let renderer = new Renderer(0x476930, 0, 300);
 let codeBox = new CodeBox();
 
 // Debugging purpose
-CollisionBox.showBounds(true);
+CollisionBox.showBounds(false);
 // ------------------
 
 let input = new Input(renderer);
@@ -41,7 +41,7 @@ let mageProjExpl : AnimatedSprite;
 
 textureLoader.addSheet("src/tilesets/overworld_tileset_grass.png", 16, 16);
 textureLoader.addSheet("src/animatedSprites/mage_attack_explosion.png", 16, 16);
-textureLoader.addTexture("src/sprites/mage.png");
+textureLoader.addSheet("src/sprites/mage.png", 16, 32);
 textureLoader.addTexture("src/sprites/swampMonster.png");
 
 textureLoader.load((texture : Texture[][]) => {
@@ -53,9 +53,10 @@ textureLoader.load((texture : Texture[][]) => {
     mageProjExplTex.push(texture[1][i]);
   }
 
-  let mageTexture = texture[2][0];
-  mage = new MagePlayer(mageTexture, new Vector2f(centerX, centerY + 8), 100, 20, mageProjExplTex);
-  mage.setCollison(new Vector2f(0, 0), 12, 16);
+  let mageTextureIdle = texture[2].slice(0, 5);
+  let mageTextureRun = texture[2].slice(6, 9);
+  mage = new MagePlayer(mageTextureIdle, new Vector2f(centerX, centerY + 12), 100, 100, 20, mageProjExplTex, 0.1, 0.025, mageTextureRun);
+  mage.setCollison(new Vector2f(0, 8), 12, 16);
   renderer.renderContainer(mage, 'character');
 
   let swampMonsterTexture = texture[3][0];
@@ -138,7 +139,7 @@ async function interpretCommands() {
   let currentLine
   // TODO: RESET SCENE
   //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
-  await sleep(500);
+  await sleep(1000);
   for (let i = 0; i < str.length; i++) {
       
     //let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
@@ -166,7 +167,7 @@ async function interpretCommands() {
       errorLine(i);
       break;
     }
-    await sleep(500);
+    await sleep(1000);
     codeBox.unmarkLine(i);
   }
 }

@@ -36,5 +36,6 @@ export abstract class Boss extends PIXI.Container {
     protected collision : CollisionBox;
     protected sprite : Sprite;
     protected abstract health : number;
-    //protected abstract healthBar : PIXI.Container
+    protected abstract maxHealth : number;
+    protected abstract hpBar : PIXI.Container
 };
