@@ -5,7 +5,7 @@ import { Texture } from './texture';
 
 export class AnimatedSprite {
 
-    constructor(textures : Texture[], pos : Vector2f, animationSpeed : number, playOnce? : boolean) {
+    constructor(textures : Texture[], pos : Vector2f, animationSpeed : number, playOnce? : boolean, destroyOnFinish? : boolean) {
 
         let pixiTextures : PIXI.Texture[] = [];
         textures.forEach(e => {
@@ -27,8 +27,11 @@ export class AnimatedSprite {
             this.pixiSprite.loop = !playOnce;
 
             // AFTER ANIMATION FINISHES
-            this.pixiSprite.onComplete = function () {
+            this.pixiSprite.onComplete = () => {
                 this.isFinished = true;
+                /*if (typeof destroyOnFinish !== 'undefined' && destroyOnFinish) {
+                    this.pixiSprite.destroy();
+                }*/
             };
         }
 
@@ -55,6 +58,15 @@ export class AnimatedSprite {
         this.pixiSprite.y += value.y;
     }
 
+    public setTextures(textures : Texture[]) {
+        let pixiTextures : PIXI.Texture[] = [];
+        textures.forEach(e => {
+            pixiTextures.push(e.texture);
+        });
+
+        this.pixiSprite.textures = pixiTextures;
+    }
+
     /**
      * Set sprite position,
      * @param value vector position, 0,0 is top left
@@ -66,34 +78,6 @@ export class AnimatedSprite {
 
     public play() : void {
         this.pixiSprite.play();
-    }
-
-    public doesCollideWithSprite(sprite : Sprite) : boolean {
-            // RIGHT SIDE
-        if (((this.pos.x + this.width / 2 > sprite.pos.x - sprite.width / 2 && this.pos.x + this.width / 2 < sprite.pos.x + sprite.width / 2) ||
-            // LEFT SIDE
-            (this.pos.x - this.width / 2 < sprite.pos.x + sprite.width / 2 && this.pos.x - this.width / 2 > sprite.pos.x - sprite.width / 2)) &&
-            // UP SIDE
-            ((this.pos.y + this.height / 2 > sprite.pos.y - sprite.height / 2 && this.pos.y + this.height / 2 < sprite.pos.y + sprite.height / 2) ||
-            // DOWN SIDE
-            (this.pos.y - this.height / 2 < sprite.pos.y + sprite.height / 2 && this.pos.y - this.height / 2 > sprite.pos.y - sprite.height / 2)))
-            return true;
-
-        return false;
-    }
-
-    public doesCollideWithAnimSprite(sprite : AnimatedSprite) : boolean {
-            // RIGHT SIDE
-        if (((this.pos.x + this.width / 2 > sprite.pos.x - sprite.width / 2 && this.pos.x + this.width / 2 < sprite.pos.x + sprite.width / 2) ||
-            // LEFT SIDE
-            (this.pos.x - this.width / 2 < sprite.pos.x + sprite.width / 2 && this.pos.x - this.width / 2 > sprite.pos.x - sprite.width / 2)) &&
-            // UP SIDE
-            ((this.pos.y + this.height / 2 > sprite.pos.y - sprite.height / 2 && this.pos.y + this.height / 2 < sprite.pos.y + sprite.height / 2) ||
-            // DOWN SIDE
-            (this.pos.y - this.height / 2 < sprite.pos.y + sprite.height / 2 && this.pos.y - this.height / 2 > sprite.pos.y - sprite.height / 2)))
-            return true;
-
-        return false;
     }
 
     /**
