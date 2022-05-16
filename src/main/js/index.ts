@@ -6,10 +6,10 @@ import { Texture } from './gameEngine/objectManager/texture';
 import { Vector2f } from './gameEngine/math/vector';
 import { Tilemap } from './gameEngine/objectManager/tilemap';
 import { Input } from './gameEngine/inputManager/input';
-import { sleep } from './gameEngine/utils/utils';
+import { getRandomInt, sleep } from './gameEngine/utils/utils';
 import { CodeBox } from './gameEngine/windowManager/codeBox';
 import { MagePlayer } from './players/magePlayer';
-import { SwampMonster } from './npcs/swampMonster';
+import { OgreBoss } from './npcs/OgreBoss';
 import * as PIXI from 'pixi.js'
 import { Commands } from './languageSystem/commands';
 import { Bullet } from './objects/bullet';
@@ -34,19 +34,26 @@ let centerY = renderer.height / 2;
 
 let tilemap : Tilemap;
 let mage : MagePlayer;
-let swampMonster : SwampMonster;
+let ogreBoss : OgreBoss;
 let mageProjExplTex : Texture[] = [];
 
 let mageProjExpl : AnimatedSprite;
 
+let colliders : CollisionBox[] = [];
+
 textureLoader.addSheet("src/tilesets/overworld_tileset_grass.png", 16, 16);
 textureLoader.addSheet("src/animatedSprites/mage_attack_explosion.png", 16, 16);
 textureLoader.addSheet("src/sprites/mage.png", 16, 32);
-textureLoader.addTexture("src/sprites/swampMonster.png");
+textureLoader.addSheet("src/animatedSprites/stone.png", 16, 16);
+textureLoader.addSheet("src/sprites/ogre.png", 32, 32);
 
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
   tilemap = new Tilemap("src/tilemaps/map_grass.tmx", sheet, new Vector2f(centerX, centerY));
+  colliders.push(new CollisionBox(new Vector2f(520, 66), 16, 272));
+  colliders.push(new CollisionBox(new Vector2f(984, 66), 16, 272));
+  colliders.push(new CollisionBox(new Vector2f(520, 66), 480, 16));
+  colliders.push(new CollisionBox(new Vector2f(520, 322), 480, 16));
   renderer.renderTilemap(tilemap, "tilemap");
 
   for (let i = 0; i < 8; i++) {
@@ -55,14 +62,24 @@ textureLoader.load((texture : Texture[][]) => {
 
   let mageTextureIdle = texture[2].slice(0, 5);
   let mageTextureRun = texture[2].slice(6, 9);
-  mage = new MagePlayer(mageTextureIdle, new Vector2f(centerX, centerY + 12), 100, 100, 20, mageProjExplTex, 0.1, 0.025, mageTextureRun);
+  mage = new MagePlayer(mageTextureIdle, new Vector2f(centerX, centerY + 12), mageProjExplTex, mageTextureRun);
   mage.setCollison(new Vector2f(0, 8), 12, 16);
   renderer.renderContainer(mage, 'character');
 
-  let swampMonsterTexture = texture[3][0];
-  swampMonster = new SwampMonster(swampMonsterTexture,  new Vector2f(centerX, centerY - 100));
-  swampMonster.setCollison(new Vector2f(0, 0), 18, 22);
-  renderer.renderContainer(swampMonster, 'character');
+  let ogreAttackTexture = texture[3].slice(0, 8);
+
+  let ogreTextureIdle = texture[4].slice(0, 4);
+  let ogreTextureRun = texture[4].slice(5, 8);
+  ogreBoss = new OgreBoss(ogreTextureIdle,  new Vector2f(centerX, centerY - 100), ogreTextureRun, ogreAttackTexture);
+  ogreBoss.setCollison(new Vector2f(0, 0), 18, 22);
+  renderer.renderContainer(ogreBoss, 'character');
+
+
+
+  // Render colliders
+  colliders.forEach(e => {
+    renderer.renderContainer(e.graphics);
+  });
 
   // Start zoomed in
   renderer.scaleStage(new Vector2f(1.2, 1.2));
@@ -81,7 +98,8 @@ textureLoader.after(() => {
 
 
 function mainGameLoop(delta : number) : void {
-  mage.update(delta, swampMonster);
+  mage.update(delta, ogreBoss, colliders);
+  ogreBoss.update(delta, mage, colliders);
 
   interactiveMap(delta);
 }
@@ -153,9 +171,12 @@ async function interpretCommands() {
       let status = Commands[commandLine[0]]({
         renderer: renderer,
         player: mage,
-        monster: swampMonster,
+        monster: ogreBoss,
+        colliders: colliders,
         args: commandLineArgs
       });
+
+      bossMove();
 
       if (status != 0) {
         errorLine(i);
@@ -177,4 +198,29 @@ async function errorLine(lineNum : number) {
   codeBox.markErrorLine(lineNum);
   await sleep(2000);
   codeBox.unmarkLine(lineNum);
+}
+
+function bossMove() : void {
+  switch(getRandomInt(8)) {
+    case 0:
+      ogreBoss.move(new Vector2f(16, 0));
+      break;
+    case 1:
+      ogreBoss.move(new Vector2f(-16, 0));
+      break;
+    case 2:
+      ogreBoss.move(new Vector2f(0, 16));
+      break;
+    case 3:
+      ogreBoss.move(new Vector2f(0, 16));
+      break;
+    case 4:
+    case 5:
+    case 6:
+      ogreBoss.attack(renderer, mage);
+      break;
+    case 7:
+    default:
+      break;
+  }
 }

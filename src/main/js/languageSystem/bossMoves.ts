@@ -1,7 +1,7 @@
 import { Vector2f } from "../gameEngine/math/vector";
 import { Renderer } from "../gameEngine/windowManager/renderer";
 import { Boss } from "../npcs/boss";
-import { SwampMonster } from "../npcs/swampMonster";
+import { OgreBoss } from "../npcs/OgreBoss";
 import { Player } from "../players/player";
 
 export type BossArgs = {

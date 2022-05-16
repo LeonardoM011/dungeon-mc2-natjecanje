@@ -4,13 +4,16 @@ import { Texture } from "../gameEngine/objectManager/texture";
 import * as PIXI from 'pixi.js';
 import { Renderer } from "../gameEngine/windowManager/renderer";
 import { CollisionBox } from "../gameEngine/objectManager/collisionBox";
+import { AnimatedSprite } from "../gameEngine/objectManager/animatedSprite";
+import { Player } from "../players/player";
 
 export abstract class Boss extends PIXI.Container {
-    protected constructor(texture : Texture, origin : Vector2f) {
+    protected constructor(textureIdle : Texture[], origin : Vector2f) {
         super();
 
-        this.sprite = new Sprite(texture, new Vector2f(0));
-        this.addChild(this.sprite.sprite);
+        this.sprite = new AnimatedSprite(textureIdle, new Vector2f(0), 0.1, false, false);
+        this.sprite.play();
+        this.addChild(this.sprite.animatedSprite);
 
         this.position.x = origin.x;
         this.position.y = origin.y;
@@ -21,11 +24,11 @@ export abstract class Boss extends PIXI.Container {
         this.addChild(this.collision.graphics);
     }
 
-    public abstract update(delta : number, boss : Boss) : void;
+    public abstract update(delta : number, player : Player, colliders : CollisionBox[]) : void;
 
     public abstract move(direction : Vector2f) : void;
 
-    public abstract attack(renderer : Renderer, boss : Boss) : void;
+    public abstract attack(renderer : Renderer, player : Player) : void;
 
     public abstract damage(hp : number) : void;
 
@@ -34,7 +37,7 @@ export abstract class Boss extends PIXI.Container {
     get pos() : Vector2f { return new Vector2f(this.position.x, this.position.y); }
 
     protected collision : CollisionBox;
-    protected sprite : Sprite;
+    protected sprite : AnimatedSprite;
     protected abstract health : number;
     protected abstract maxHealth : number;
     protected abstract hpBar : PIXI.Container

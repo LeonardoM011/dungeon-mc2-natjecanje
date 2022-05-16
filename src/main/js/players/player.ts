@@ -27,13 +27,17 @@ export abstract class Player extends PIXI.Container {
         this.addChild(this.collision.graphics);
     }
 
-    public abstract update(delta : number, boss : Boss) : void;
+    public abstract update(delta : number, boss : Boss, colliders : CollisionBox[]) : void;
 
-    public abstract move(direction : Vector2f) : void;
+    public abstract move(direction : Vector2f, colliders : CollisionBox[]) : void;
 
     public abstract attack(renderer : Renderer, boss : Boss) : void;
 
+    public abstract damage(hp : number) : void;
+
     get colBox() : CollisionBox { return this.collision; }
+
+    get pos() : Vector2f { return new Vector2f(this.position.x, this.position.y); }
 
     protected collision : CollisionBox;
     protected sprite : AnimatedSprite;

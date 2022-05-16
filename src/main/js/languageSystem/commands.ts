@@ -1,7 +1,7 @@
 import { Vector2f } from "../gameEngine/math/vector";
+import { CollisionBox } from "../gameEngine/objectManager/collisionBox";
 import { Renderer } from "../gameEngine/windowManager/renderer";
 import { Boss } from "../npcs/boss";
-import { SwampMonster } from "../npcs/swampMonster";
 import { Player } from "../players/player";
 
 /*function shootBullet() {
@@ -24,25 +24,26 @@ export type commandArgs = {
     renderer : Renderer,
     player : Player,
     monster : Boss,
+    colliders : CollisionBox[],
     args? : string[]
 };
 
 export let Commands : { [key: string]: Function } = {
 
     'LIJEVO': (args : commandArgs) : number => {
-        args.player.move(new Vector2f(-16, 0)); 
+        args.player.move(new Vector2f(-16, 0), args.colliders); 
         return 0;
     },
     'DESNO': (args : commandArgs) : number => { 
-        args.player.move(new Vector2f(16, 0)); 
+        args.player.move(new Vector2f(16, 0), args.colliders); 
         return 0;
     },
     'GORE': (args : commandArgs) : number => { 
-        args.player.move(new Vector2f(0, -16)); 
+        args.player.move(new Vector2f(0, -16), args.colliders); 
         return 0;
     },
     'DOLJE': (args : commandArgs) : number => { 
-        args.player.move(new Vector2f(0, 16)); 
+        args.player.move(new Vector2f(0, 16), args.colliders); 
         return 0;
     },
     // TODO: REWORK WITH ARGUMENTS

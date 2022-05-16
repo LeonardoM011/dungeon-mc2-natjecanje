@@ -1,11 +1,8 @@
 import { Vector2f } from "../gameEngine/math/vector";
-import { AnimatedSprite } from "../gameEngine/objectManager/animatedSprite";
 import { CollisionBox } from "../gameEngine/objectManager/collisionBox";
-import { Sprite } from "../gameEngine/objectManager/sprite";
 import { Texture } from "../gameEngine/objectManager/texture";
 import { Renderer } from "../gameEngine/windowManager/renderer";
 import { Boss } from "../npcs/boss";
-import { SwampMonster } from "../npcs/swampMonster";
 import { Bullet } from "../objects/bullet";
 import { HealthBar } from "../objects/healthBar";
 import { ManaBar } from "../objects/manaBar";
@@ -15,28 +12,23 @@ import { Player } from "./player";
 export class MagePlayer extends Player {
 
     constructor(idleTextures : Texture[], 
-                origin : Vector2f, 
-                totalHealth : number, 
-                totalMana : number,
-                attackPower : number, 
-                projectileTexture : Texture[], 
-                animSpeed : number, 
-                moveSpeed : number,
+                origin : Vector2f,
+                projectileTexture : Texture[],
                 runTextures : Texture[]) {
                 
-        super(idleTextures, origin, animSpeed);
+        super(idleTextures, origin, 0.1);
         this.projTex = projectileTexture;
         this.projectiles = [];
 
         this.idleTexture = idleTextures;
         this.runTexture = runTextures;
         
-        this.health = totalHealth;
-        this.maxHealth = totalHealth;
-        this.mana = totalMana;
-        this.maxMana = totalMana; 
-        this.attackPower = attackPower;
-        this.moveSpeed = moveSpeed;
+        this.health = 100;
+        this.maxHealth = 100;
+        this.mana = 100;
+        this.maxMana = 100; 
+        this.attackPower = 20;
+        this.moveSpeed = 0.025;
 
         // Health bar
         this.hpBar = new HealthBar(new Vector2f(0, 22), 24, 4);
@@ -51,10 +43,10 @@ export class MagePlayer extends Player {
         this.isMoving = false;
     }
 
-    public override update(delta : number, boss : Boss) : void {
+    public override update(delta : number, boss : Boss, colliders : CollisionBox[]) : void {
         for (let i = 0; i < this.projectiles.length; i++) {
             let bullet = this.projectiles[i];
-            if (bullet.colBox.doesCollideWith(boss.colBox)) {
+            if (bullet.colBox.doesCollideWith(boss.colBox) || colliders.forEach(e => e.doesCollideWith(bullet.colBox))) {
                 bullet.play();
 
                 if (bullet.didAnimFinish()) {
@@ -76,7 +68,7 @@ export class MagePlayer extends Player {
         
     }
 
-    public override move(direction : Vector2f) : void {
+    public override move(direction : Vector2f, colliders : CollisionBox[]) : void {
         this.moveDirection = direction;
         this.moveOriginalPos = new Vector2f(this.position.x, this.position.y)
         this.sprite.setTextures(this.runTexture);
@@ -85,6 +77,9 @@ export class MagePlayer extends Player {
     }
 
     public override attack(renderer : Renderer, boss : Boss) : void {
+        if (this.mana <= 9)
+            return;
+
         let mX = this.position.x;
         let mY = this.position.y;
         let sX = boss.pos.x;
@@ -96,9 +91,18 @@ export class MagePlayer extends Player {
         renderer.renderContainer(bullet, "projectile");
         this.projectiles.push(bullet);
 
-        this.mana -= 20;
+        this.mana -= 10;
         this.manaBar.setManaPercent(this.mana / this.maxMana);
     }
+
+    public override damage(hp : number) : void {
+        this.health -= hp;
+        this.hpBar.setHpPercent(this.health / this.maxHealth);
+
+        if (this.health <= 0)
+            alert("Izgubili ste!");
+    }
+    
 
     private moveBack() {
         if (!this.isMoving)
