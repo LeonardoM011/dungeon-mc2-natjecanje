@@ -66,43 +66,11 @@ export class Renderer {
         });
     }
 
-    /**
-     * Render sprite object
-     * @param sprite sprite which you want to render
-     */
-    public renderSprite(sprite : Sprite, layer? : string) : void {
+    public render(object : any, layer? : string) {
         if (typeof layer !== 'undefined') {
-            this.layers[layer].addChild(sprite.sprite);
+            this.layers[layer].addChild(object);
         } else {
-            this.layers.default.addChild(sprite.sprite);
-        }
-    }
-
-    /**
-     * Render tilemap object
-     * @param tilemap tilemap which you want to render
-     */
-    public renderTilemap(tilemap : Tilemap, layer? : string) : void {
-        if (typeof layer !== 'undefined') {
-            this.layers[layer].addChild(tilemap.container);
-        } else {
-            this.layers.default.addChild(tilemap.container);
-        }
-    }
-
-    public renderAnimSprite(animatedSprite : AnimatedSprite, layer? : string) : void {
-        if (typeof layer !== 'undefined') {
-            this.layers[layer].addChild(animatedSprite.animatedSprite);
-        } else {
-            this.layers.default.addChild(animatedSprite.animatedSprite);
-        }
-    }
-
-    public renderContainer(container : PIXI.Container, layer? : string) : void {
-        if (typeof layer !== 'undefined') {
-            this.layers[layer].addChild(container);
-        } else {
-            this.layers.default.addChild(container);
+            this.layers.default.addChild(object);
         }
     }
 

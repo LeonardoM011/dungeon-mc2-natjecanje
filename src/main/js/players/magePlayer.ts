@@ -11,39 +11,28 @@ import { Player } from "./player";
 
 export class MagePlayer extends Player {
 
-    constructor(idleTextures : Texture[], 
+    constructor(idleTextures : Texture[],
+                runTextures : Texture[],
                 origin : Vector2f,
-                projectileTexture : Texture[],
-                runTextures : Texture[]) {
+                projectileTexture : Texture[]) {
                 
-        super(idleTextures, origin, 0.1);
+        super(idleTextures, runTextures, origin, 0.1, 100, 20, 0.025);
+        this.setCollison(new Vector2f(0, 8), 12, 16);
+
         this.projTex = projectileTexture;
         this.projectiles = [];
-
-        this.idleTexture = idleTextures;
-        this.runTexture = runTextures;
         
-        this.health = 100;
-        this.maxHealth = 100;
         this.mana = 100;
         this.maxMana = 100; 
-        this.attackPower = 20;
-        this.moveSpeed = 0.025;
-
-        // Health bar
-        this.hpBar = new HealthBar(new Vector2f(0, 22), 24, 4);
-        this.addChild(this.hpBar);
-
         this.manaBar = new ManaBar(new Vector2f(0, 28), 24, 4);
         this.addChild(this.manaBar);
 
-        this.moveDirection = new Vector2f(0);
-        this.moveOriginalPos = new Vector2f(0);
-
-        this.isMoving = false;
+        this.attackCost = 20;
     }
 
-    public override update(delta : number, boss : Boss, colliders : CollisionBox[]) : void {
+    public update(delta : number, boss : Boss, colliders : CollisionBox[]) : void {
+        this.superUpdate(delta);
+
         for (let i = 0; i < this.projectiles.length; i++) {
             let bullet = this.projectiles[i];
             if (bullet.colBox.doesCollideWith(boss.colBox) || colliders.forEach(e => e.doesCollideWith(bullet.colBox))) {
@@ -58,26 +47,10 @@ export class MagePlayer extends Player {
                 bullet.updatePos(delta);
             }
         }
-
-        if (this.isMoving) {
-            this.position.x += this.moveDirection.x * this.moveSpeed * delta;
-            this.position.y += this.moveDirection.y * this.moveSpeed * delta;
-            this.moveBack();
-        }
-        
-        
-    }
-
-    public override move(direction : Vector2f, colliders : CollisionBox[]) : void {
-        this.moveDirection = direction;
-        this.moveOriginalPos = new Vector2f(this.position.x, this.position.y)
-        this.sprite.setTextures(this.runTexture);
-        this.sprite.play();
-        this.isMoving = true;
     }
 
     public override attack(renderer : Renderer, boss : Boss) : void {
-        if (this.mana <= 9)
+        if (this.mana <= this.attackCost - 1)
             return;
 
         let mX = this.position.x;
@@ -88,61 +61,17 @@ export class MagePlayer extends Player {
         velVector = velVector.normalize();
         velVector = velVector.multiplyVal(2);
         let bullet = new Bullet(this.projTex, new Vector2f(this.position.x, this.position.y), 0.3, velVector);
-        renderer.renderContainer(bullet, "projectile");
+        renderer.render(bullet, "projectile");
         this.projectiles.push(bullet);
 
-        this.mana -= 10;
+        this.mana -= this.attackCost;
         this.manaBar.setManaPercent(this.mana / this.maxMana);
-    }
-
-    public override damage(hp : number) : void {
-        this.health -= hp;
-        this.hpBar.setHpPercent(this.health / this.maxHealth);
-
-        if (this.health <= 0)
-            alert("Izgubili ste!");
-    }
-    
-
-    private moveBack() {
-        if (!this.isMoving)
-            return
-
-        if (this.moveDirection.x > 0 && this.moveOriginalPos.x + 16 < this.position.x) {
-            this.position.x += this.moveOriginalPos.x + 16 - this.position.x;
-        }
-        else if (this.moveDirection.x < 0 && this.moveOriginalPos.x - 16 > this.position.x) {
-            this.position.x += this.moveOriginalPos.x - 16 - this.position.x;
-        }
-        else if (this.moveDirection.y > 0 && this.moveOriginalPos.y + 16 < this.position.y) {
-            this.position.y += this.moveOriginalPos.y + 16 - this.position.y;
-        }
-        else if (this.moveDirection.y < 0 && this.moveOriginalPos.y - 16 > this.position.y) {
-            this.position.y += this.moveOriginalPos.y - 16 - this.position.y;
-        } else {
-            return
-        }
-
-        this.isMoving = false
-        this.moveDirection = new Vector2f(0);
-        this.sprite.setTextures(this.idleTexture);
-        this.sprite.play();
-        
     }
 
     private projTex : Texture[];
     private projectiles : Bullet[];
-    private idleTexture : Texture[];
-    private runTexture : Texture[];
-    protected override health : number;
-    protected override maxHealth : number;
-    protected override mana : number;
-    protected override maxMana : number; 
-    protected override attackPower: number;
-    protected override hpBar: HealthBar;
-    protected override manaBar : ManaBar;
-    protected override moveSpeed: number;
-    protected override moveDirection: Vector2f;
-    protected override moveOriginalPos : Vector2f;
-    protected isMoving : boolean;
+    private mana : number;
+    private maxMana : number; 
+    private manaBar : ManaBar;
+    private attackCost : number;
 };
