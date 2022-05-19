@@ -76,7 +76,14 @@ export abstract class Player extends PIXI.Container {
         this.hpBar.setHpPercent(this.health / this.maxHealth);
 
         if (this.health <= 0)
-            alert("Izgubili ste!");
+            if (window.confirm('Izgubili ste!'))
+            {
+                window.location.href = "/";
+            }
+            else
+            {
+                window.location.href = "/";
+            }
     }
 
     get colBox() : CollisionBox { return this.collision; }

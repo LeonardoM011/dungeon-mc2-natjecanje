@@ -63,7 +63,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: 'Roboto', sans-serif;\r\n    background: linear-gradient(purple, mediumpurple, blue) 100% 100% no-repeat;\r\n    background-size:cover;\r\n}\r\n\r\nhtml {\r\n    min-height: 100%;\r\n}\r\n\r\n#wrapper {\r\n    width: fit-content;\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: rgba(220, 220, 220, 0.65);\r\n    padding: 20px;\r\n    border-radius: 25px;\r\n}\r\n\r\nimg {\r\n    filter: blur(0);\r\n}\r\n\r\nh1 {\r\n    text-align: center;\r\n    font-size: 36px;\r\n    padding: 0;\r\n    margin: 0;\r\n    font-family: 'VT323', monospace;\r\n}\r\n\r\nimg:hover {\r\n    filter: blur(2px);\r\n    filter: contrast(50%);\r\n    cursor: pointer;\r\n}", "",{"version":3,"sources":["webpack://./src/main/js/rooms.css"],"names":[],"mappings":"AAAA;IACI,iCAAiC;IACjC,2EAA2E;IAC3E,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,kBAAkB;IAClB,eAAe;IACf,QAAQ;IACR,SAAS;IACT,gCAAgC;IAChC,2CAA2C;IAC3C,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,kBAAkB;IAClB,eAAe;IACf,UAAU;IACV,SAAS;IACT,+BAA+B;AACnC;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,eAAe;AACnB","sourcesContent":["body {\r\n    font-family: 'Roboto', sans-serif;\r\n    background: linear-gradient(purple, mediumpurple, blue) 100% 100% no-repeat;\r\n    background-size:cover;\r\n}\r\n\r\nhtml {\r\n    min-height: 100%;\r\n}\r\n\r\n#wrapper {\r\n    width: fit-content;\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: rgba(220, 220, 220, 0.65);\r\n    padding: 20px;\r\n    border-radius: 25px;\r\n}\r\n\r\nimg {\r\n    filter: blur(0);\r\n}\r\n\r\nh1 {\r\n    text-align: center;\r\n    font-size: 36px;\r\n    padding: 0;\r\n    margin: 0;\r\n    font-family: 'VT323', monospace;\r\n}\r\n\r\nimg:hover {\r\n    filter: blur(2px);\r\n    filter: contrast(50%);\r\n    cursor: pointer;\r\n}"],"sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n    font-family: 'Roboto', sans-serif;\r\n    background: linear-gradient(purple, mediumpurple, blue) 100% 100% no-repeat;\r\n    background-size:cover;\r\n}\r\n\r\nhtml {\r\n    min-height: 100%;\r\n}\r\n\r\n#wrapper {\r\n    width: fit-content;\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: rgba(220, 220, 220, 0.65);\r\n    padding: 20px;\r\n    border-radius: 25px;\r\n}\r\n\r\nimg {\r\n    filter: blur(0);\r\n}\r\n\r\nh1 {\r\n    text-align: center;\r\n    font-size: 36px;\r\n    padding: 0;\r\n    margin: 0;\r\n    font-family: 'VT323', monospace;\r\n}\r\n\r\nh2 {\r\n    padding: 10px 0 10px 20px;\r\n    margin: 0;\r\n    font-family: 'VT323', monospace;\r\n    font-size: 34px;\r\n    width: fit-content;\r\n    float: left;\r\n}\r\n\r\nh3 {\r\n    float: right;\r\n    width: fit-content;\r\n    margin: 20px 20px 0 0;\r\n}\r\n\r\nh3:hover {\r\n    cursor: pointer;\r\n}\r\n\r\n.spanuser {\r\n    font-weight: bolder;\r\n    color: white;\r\n    font-size: 38px;\r\n}\r\n\r\nheader {\r\n    float: left;\r\n    width: 100%;\r\n    background-color: grey;\r\n    opacity: 0.7;\r\n}\r\n\r\nimg:hover {\r\n    filter: blur(2px);\r\n    filter: contrast(50%);\r\n    cursor: pointer;\r\n}", "",{"version":3,"sources":["webpack://./src/main/js/rooms.css"],"names":[],"mappings":"AAAA;IACI,iCAAiC;IACjC,2EAA2E;IAC3E,qBAAqB;AACzB;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,kBAAkB;IAClB,eAAe;IACf,QAAQ;IACR,SAAS;IACT,gCAAgC;IAChC,2CAA2C;IAC3C,aAAa;IACb,mBAAmB;AACvB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,kBAAkB;IAClB,eAAe;IACf,UAAU;IACV,SAAS;IACT,+BAA+B;AACnC;;AAEA;IACI,yBAAyB;IACzB,SAAS;IACT,+BAA+B;IAC/B,eAAe;IACf,kBAAkB;IAClB,WAAW;AACf;;AAEA;IACI,YAAY;IACZ,kBAAkB;IAClB,qBAAqB;AACzB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,mBAAmB;IACnB,YAAY;IACZ,eAAe;AACnB;;AAEA;IACI,WAAW;IACX,WAAW;IACX,sBAAsB;IACtB,YAAY;AAChB;;AAEA;IACI,iBAAiB;IACjB,qBAAqB;IACrB,eAAe;AACnB","sourcesContent":["body {\r\n    font-family: 'Roboto', sans-serif;\r\n    background: linear-gradient(purple, mediumpurple, blue) 100% 100% no-repeat;\r\n    background-size:cover;\r\n}\r\n\r\nhtml {\r\n    min-height: 100%;\r\n}\r\n\r\n#wrapper {\r\n    width: fit-content;\r\n    position: fixed;\r\n    top: 50%;\r\n    left: 50%;\r\n    transform: translate(-50%, -50%);\r\n    background-color: rgba(220, 220, 220, 0.65);\r\n    padding: 20px;\r\n    border-radius: 25px;\r\n}\r\n\r\nimg {\r\n    filter: blur(0);\r\n}\r\n\r\nh1 {\r\n    text-align: center;\r\n    font-size: 36px;\r\n    padding: 0;\r\n    margin: 0;\r\n    font-family: 'VT323', monospace;\r\n}\r\n\r\nh2 {\r\n    padding: 10px 0 10px 20px;\r\n    margin: 0;\r\n    font-family: 'VT323', monospace;\r\n    font-size: 34px;\r\n    width: fit-content;\r\n    float: left;\r\n}\r\n\r\nh3 {\r\n    float: right;\r\n    width: fit-content;\r\n    margin: 20px 20px 0 0;\r\n}\r\n\r\nh3:hover {\r\n    cursor: pointer;\r\n}\r\n\r\n.spanuser {\r\n    font-weight: bolder;\r\n    color: white;\r\n    font-size: 38px;\r\n}\r\n\r\nheader {\r\n    float: left;\r\n    width: 100%;\r\n    background-color: grey;\r\n    opacity: 0.7;\r\n}\r\n\r\nimg:hover {\r\n    filter: blur(2px);\r\n    filter: contrast(50%);\r\n    cursor: pointer;\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -32661,6 +32661,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var _rooms_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./rooms.css */ "./src/main/js/rooms.css");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 var React = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var ReactDOM = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -32681,7 +32693,28 @@ function Rooms() {
     navigate(path);
   };
 
-  return /*#__PURE__*/React.createElement("div", {
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""),
+      _useState2 = _slicedToArray(_useState, 2),
+      username = _useState2[0],
+      setUsername = _useState2[1];
+
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    fetch("/auth/get-username", {}).then(function (response) {
+      return response.text();
+    }).then(function (text) {
+      // <!DOCTYPE ....
+      var txt = JSON.parse(text);
+      txt = txt["username"];
+      setUsername(txt);
+    });
+  }, []);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("header", null, /*#__PURE__*/React.createElement("h2", null, "Dobrodo\u0161ao ", /*#__PURE__*/React.createElement("span", {
+    className: "spanuser"
+  }, username), "!"), /*#__PURE__*/React.createElement("h3", {
+    onClick: function onClick(event) {
+      return window.location.href = '/logout';
+    }
+  }, "Izlogiraj se")), /*#__PURE__*/React.createElement("div", {
     id: "wrapper"
   }, /*#__PURE__*/React.createElement("h1", null, "Soba 1"), /*#__PURE__*/React.createElement("img", {
     src: "roomThumbnail.png",
@@ -32690,7 +32723,7 @@ function Rooms() {
     onClick: function onClick(event) {
       return window.location.href = '/index';
     }
-  }));
+  })));
 }
 
 ReactDOM.render( /*#__PURE__*/React.createElement(React.StrictMode, null, /*#__PURE__*/React.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_3__.BrowserRouter, null, /*#__PURE__*/React.createElement(Rooms, null))), document.getElementById('react'));

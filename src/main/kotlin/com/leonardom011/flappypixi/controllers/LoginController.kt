@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseCookie
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.server.ResponseStatusException
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
@@ -99,25 +100,14 @@ class LoginController(private val repository: UserRepository) {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, resCookie.toString()).build()
     }
 
-    @GetMapping("/logout")
-    fun logout(@CookieValue(name = "authentication-key", defaultValue = "") authKey : String) : ResponseEntity<Any> {
-
+    @GetMapping("/get-username", produces = ["application/json"])
+    fun getUsername(@CookieValue(name = "authentication-key", defaultValue = "") authKey : String): HashMap<String, Any> {
+        val data = HashMap<String, Any>()
         val userId = AuthenticationSystem.getUserId(authKey)
-        if (userId != null) {
-            AuthenticationSystem.deleteKey(authKey)
-        }
-
-        val resCookie = ResponseCookie
-            .from("authentication-key", null.toString())
-            .httpOnly(true)
-            .secure(true)
-            .path("/")
-            .maxAge(0)
-            .domain("localhost")
-            .build()
-
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, resCookie.toString()).build();
+        data["username"] = userId?.let { repository.findById(it).get().username }!!
+        return data
     }
+
 
     @GetMapping("/delete-keys")
     fun deleteKeys(@CookieValue(name = "authentication-key", defaultValue = "") authKey : String) : ResponseEntity<Any> {

@@ -63870,7 +63870,7 @@ function Register() {
   }, /*#__PURE__*/React.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["default"], {
     item: true,
     xs: 12
-  }, /*#__PURE__*/React.createElement("h1", null, "Finance Tracker"), /*#__PURE__*/React.createElement("h3", null, "Unesite podatke za registraciju"), /*#__PURE__*/React.createElement("p", {
+  }, /*#__PURE__*/React.createElement("h1", null, "Dungeon Scripter"), /*#__PURE__*/React.createElement("h3", null, "Unesite podatke za registraciju"), /*#__PURE__*/React.createElement("p", {
     id: "wrong"
   }, wrongContent)), /*#__PURE__*/React.createElement(_material_ui_core__WEBPACK_IMPORTED_MODULE_3__["default"], {
     item: true,

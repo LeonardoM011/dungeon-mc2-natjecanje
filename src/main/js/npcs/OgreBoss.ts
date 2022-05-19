@@ -121,7 +121,14 @@ export class OgreBoss extends Boss {
         this.hpBar.setHpPercent(this.health / this.maxHealth);
 
         if (this.health <= 0)
-            alert("Boss ubijen!");
+            if (window.confirm('Pobijedili ste!'))
+            {
+                window.location.href = "/";
+            }
+            else
+            {
+                window.location.href = "/";
+            }
     }
 
     get hp() {

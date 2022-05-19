@@ -67,7 +67,7 @@ function Register() {
         <form onSubmit={handleSubmit}>
             <Grid container spacing={2} id={"wrapper"}>
                 <Grid item xs={12}>
-                    <h1>Finance Tracker</h1>
+                    <h1>Dungeon Scripter</h1>
                     <h3>Unesite podatke za registraciju</h3>
                     <p id="wrong">{wrongContent}</p>
                 </Grid>
