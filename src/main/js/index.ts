@@ -18,6 +18,8 @@ import { HealthBar } from './objects/healthBar';
 import { Player } from './players/player';
 import { CollisionBox } from './gameEngine/objectManager/collisionBox';
 import { BackgroundTiles } from './objects/backgroundTiles';
+import { HealerPlayer } from './players/healerPlayer';
+import { TankPlayer } from './players/tankPlayer';
 
 let renderer = new Renderer(0x476930, 0, 300);
 let consoleMage = new CodeBox("consoleMage");
@@ -25,7 +27,7 @@ let consoleHealer = new CodeBox("consoleHealer");
 let consoleTank = new CodeBox("consoleTank");
 
 // Debugging purpose
-CollisionBox.showBounds(true);
+CollisionBox.showBounds(false);
 // ------------------
 
 let input = new Input(renderer);
@@ -37,6 +39,8 @@ let centerY = renderer.height / 2;
 
 let tilemap : BackgroundTiles;
 let mage : MagePlayer;
+let healer : HealerPlayer;
+let tank : TankPlayer;
 let ogreBoss : OgreBoss;
 let mageProjExplTex : Texture[] = [];
 
@@ -49,6 +53,9 @@ textureLoader.addSheet("src/animatedSprites/mage_attack_explosion.png", 16, 16);
 textureLoader.addSheet("src/sprites/mage.png", 16, 32);
 textureLoader.addSheet("src/animatedSprites/stone.png", 16, 16);
 textureLoader.addSheet("src/sprites/ogre.png", 32, 32);
+textureLoader.addSheet("src/animatedSprites/healer_heal.png", 16, 16);
+textureLoader.addSheet("src/sprites/healer.png", 16, 32);
+textureLoader.addSheet("src/sprites/tank.png", 16, 32);
 
 textureLoader.load((texture : Texture[][]) => {
   let sheet = texture[0];
@@ -65,7 +72,7 @@ textureLoader.load((texture : Texture[][]) => {
 
   let mageTextureIdle = texture[2].slice(0, 5);
   let mageTextureRun = texture[2].slice(6, 9);
-  mage = new MagePlayer(mageTextureIdle, mageTextureRun, new Vector2f(centerX, centerY + 12), mageProjExplTex);
+  mage = new MagePlayer(mageTextureIdle, mageTextureRun, new Vector2f(centerX - 48, centerY + 60), mageProjExplTex);
   renderer.render(mage, 'character');
 
   let ogreAttackTexture = texture[3].slice(0, 8);
@@ -76,7 +83,20 @@ textureLoader.load((texture : Texture[][]) => {
   ogreBoss.setCollison(new Vector2f(0, 0), 18, 22);
   renderer.render(ogreBoss, 'character');
 
+  let healerProjectile : Texture[] = [];
+  for (let i = 0; i < 8; i++) {
+    healerProjectile.push(texture[5][i]);
+  }
 
+  let healerTextureIdle = texture[6].slice(0, 5);
+  let healerTextureRun = texture[6].slice(6, 9);
+  healer = new HealerPlayer(healerTextureIdle, healerTextureRun, new Vector2f(centerX, centerY + 60), healerProjectile);
+  renderer.render(healer, 'character');
+
+  let tankTextureIdle = texture[7].slice(0, 5);
+  let tankTextureRun = texture[7].slice(6, 9);
+  tank = new TankPlayer(tankTextureIdle, tankTextureRun, new Vector2f(centerX + 48, centerY + 60));
+  renderer.render(tank, 'character');
 
   // Render colliders
   colliders.forEach(e => {
@@ -101,7 +121,9 @@ textureLoader.after(() => {
 
 function mainGameLoop(delta : number) : void {
   mage.update(delta, ogreBoss, colliders);
-  ogreBoss.update(delta, mage, colliders);
+  healer.update(delta, ogreBoss, [tank, mage], colliders);
+  tank.update(delta, ogreBoss, colliders);
+  ogreBoss.update(delta, [mage, healer, tank], colliders);
 
   interactiveMap(delta);
 }
@@ -131,51 +153,114 @@ function interactiveMap(delta : number) : void {
 async function interpretCommands() {
   //if(!interpreter.running) return;
   //interpreter.interpret(codeBox.getContents());
-  let str = consoleMage.getContents().split("\n");
+  let mageContents = consoleMage.getContents().split("\n");
+  let healerContents = consoleHealer.getContents().split("\n");
+  let tankContents = consoleTank.getContents().split("\n");
   let currentLine
   // TODO: RESET SCENE
   //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
   await sleep(1000);
-  for (let i = 0; i < str.length; i++) {
-      
-    //let row = str[i].split(/\s+/).join(' ').toLocaleUpperCase();
-    let row = str[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
+  for (let i = 0; i < Math.max(mageContents.length, healerContents.length, tankContents.length); i++) {
+    
+    if (i < mageContents.length) {
+      let row = mageContents[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
+      let commandLine = row.split(' ');
+      let commandLineArgs = row.split(' ');
+      commandLineArgs.shift();
 
-    let commandLine = row.split(' ');
-    let commandLineArgs = row.split(' ');
-    commandLineArgs.shift();
+      if (Commands[commandLine[0]]) {
+        let status = Commands[commandLine[0]]({
+          renderer: renderer,
+          player: mage,
+          monster: ogreBoss,
+          colliders: tilemap.colliders,
+          args: commandLineArgs
+        });
 
-    if (Commands[commandLine[0]]) {
-      let status = Commands[commandLine[0]]({
-        renderer: renderer,
-        player: mage,
-        monster: ogreBoss,
-        colliders: tilemap.colliders,
-        args: commandLineArgs
-      });
-
-      bossMove();
-
-      if (status != 0) {
-        errorLine(i);
+        if (status != 0) {
+          errorLine(i, consoleMage);
+          break;
+        }
+      } else {
+        errorLine(i, consoleMage);
         break;
       }
-
       consoleMage.markLine(i);
-    } else {
-      errorLine(i);
-      break;
+
     }
+
+    if (i < healerContents.length) {
+      let row = healerContents[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
+      let commandLine = row.split(' ');
+      let commandLineArgs = row.split(' ');
+      commandLineArgs.shift();
+
+      if (Commands[commandLine[0]]) {
+        let status = Commands[commandLine[0]]({
+          renderer: renderer,
+          player: healer,
+          players: [mage, tank],
+          monster: ogreBoss,
+          colliders: tilemap.colliders,
+          args: commandLineArgs
+        });
+      
+        
+
+        if (status != 0) {
+          errorLine(i, consoleHealer);
+          break;
+        }
+      } else {
+        errorLine(i, consoleHealer);
+        break;
+      }
+      consoleHealer.markLine(i);
+    }
+
+    if (i < tankContents.length) {
+      let row = tankContents[i].replace(/\s+/g,' ').trim().toLocaleUpperCase();
+      let commandLine = row.split(' ');
+      let commandLineArgs = row.split(' ');
+      commandLineArgs.shift();
+
+      if (Commands[commandLine[0]]) {
+        let status = Commands[commandLine[0]]({
+          renderer: renderer,
+          player: tank,
+          monster: ogreBoss,
+          colliders: tilemap.colliders,
+          args: commandLineArgs
+        });
+      
+        
+
+        if (status != 0) {
+          errorLine(i, consoleTank);
+          break;
+        }
+      } else {
+        errorLine(i, consoleTank);
+        break;
+      }
+      consoleTank.markLine(i);
+
+    }
+    
+
+    bossMove();
     await sleep(1000);
     consoleMage.unmarkLine(i);
+    consoleHealer.unmarkLine(i);
+    consoleTank.unmarkLine(i);
   }
 }
 
-async function errorLine(lineNum : number) {
+async function errorLine(lineNum : number, consoleClass : CodeBox) {
   console.log("NE POSTOJI");
-  consoleMage.markErrorLine(lineNum);
+  consoleClass.markErrorLine(lineNum);
   await sleep(2000);
-  consoleMage.unmarkLine(lineNum);
+  consoleClass.unmarkLine(lineNum);
 }
 
 function bossMove() : void {
@@ -195,7 +280,14 @@ function bossMove() : void {
     case 4:
     case 5:
     case 6:
-      ogreBoss.attack(renderer, mage);
+      let list = [
+        { key: healer, val: ogreBoss.pos.distanceToVec(healer.pos) },
+        { key: tank, val: ogreBoss.pos.distanceToVec(tank.pos) },
+        { key: mage, val: ogreBoss.pos.distanceToVec(mage.pos) }
+      ];
+      let closestPlayer = list.sort((a, b) => { return a.val - b.val; })[0];
+      
+      ogreBoss.attack(renderer, closestPlayer.key);
       break;
     case 7:
     default:

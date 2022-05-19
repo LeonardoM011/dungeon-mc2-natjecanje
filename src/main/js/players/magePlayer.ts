@@ -16,7 +16,7 @@ export class MagePlayer extends Player {
                 origin : Vector2f,
                 projectileTexture : Texture[]) {
                 
-        super(idleTextures, runTextures, origin, 0.1, 100, 20, 0.025);
+        super(idleTextures, runTextures, origin, 0.1, 100, 12, 20, 0.025);
         this.setCollison(new Vector2f(0, 8), 12, 16);
 
         this.projTex = projectileTexture;
@@ -47,6 +47,13 @@ export class MagePlayer extends Player {
                 bullet.updatePos(delta);
             }
         }
+    }
+
+    public replanishMana(val : number) : void {
+        if (this.mana >= this.maxMana) 
+            return;
+
+        this.mana += val;
     }
 
     public override attack(renderer : Renderer, boss : Boss) : void {

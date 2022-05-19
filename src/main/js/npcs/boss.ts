@@ -24,7 +24,7 @@ export abstract class Boss extends PIXI.Container {
         this.addChild(this.collision.graphics);
     }
 
-    public abstract update(delta : number, player : Player, colliders : CollisionBox[]) : void;
+    public abstract update(delta : number, player : Player[], colliders : CollisionBox[]) : void;
 
     public abstract move(direction : Vector2f) : void;
 

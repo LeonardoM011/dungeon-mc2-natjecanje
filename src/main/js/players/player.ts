@@ -16,6 +16,7 @@ export abstract class Player extends PIXI.Container {
                           origin : Vector2f,
                           animSpeed : number,
                           maxHealth : number,
+                          healthBarSize : number,
                           attackPower : number,
                           moveSpeed : number) {
         super();
@@ -29,7 +30,7 @@ export abstract class Player extends PIXI.Container {
 
         this.health = maxHealth;
         this.maxHealth = maxHealth;
-        this.hpBar = new HealthBar(new Vector2f(0, 22), 24, 4);
+        this.hpBar = new HealthBar(new Vector2f(0, 22), healthBarSize, 4);
         this.addChild(this.hpBar);
 
         this.attackPower = attackPower;
@@ -62,6 +63,14 @@ export abstract class Player extends PIXI.Container {
 
     public abstract attack(renderer : Renderer, boss : Boss) : void;
 
+    public heal(ammount : number) : void {
+        if (ammount + this.health >= this.maxHealth)
+            return;
+        
+        this.health += ammount;
+        this.hpBar.setHpPercent(this.health / this.maxHealth);
+    }
+
     public damage(hp : number) : void {
         this.health -= hp;
         this.hpBar.setHpPercent(this.health / this.maxHealth);
@@ -73,6 +82,10 @@ export abstract class Player extends PIXI.Container {
     get colBox() : CollisionBox { return this.collision; }
 
     get pos() : Vector2f { return new Vector2f(this.position.x, this.position.y); }
+
+    public throwHeal(renderer : Renderer, player : Player) : number {
+        return -1
+    }
 
     protected setCollison(pos : Vector2f, width : number, height : number) : void {
         this.collision = new CollisionBox(new Vector2f(pos.x - width / 2, pos.y - height / 2), width, height);
