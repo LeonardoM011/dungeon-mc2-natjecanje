@@ -76,12 +76,29 @@ export abstract class Player extends PIXI.Container {
         this.hpBar.setHpPercent(this.health / this.maxHealth);
 
         if (this.health <= 0)
-            alert("Izgubili ste!");
+            if (window.confirm('Izgubili ste!'))
+            {
+                window.location.href = "/";
+            }
+            else
+            {
+                window.location.href = "/";
+            }
     }
 
     get colBox() : CollisionBox { return this.collision; }
 
     get pos() : Vector2f { return new Vector2f(this.position.x, this.position.y); }
+
+    set setPos(pos : Vector2f) { 
+        this.position.x = pos.x; 
+        this.position.y = pos.y; 
+    }
+
+    set setHealth(hp : number) {
+        this.health = hp;
+        this.hpBar.setHpPercent(this.health / this.maxHealth);
+    }
 
     public throwHeal(renderer : Renderer, player : Player) : number {
         return -1
