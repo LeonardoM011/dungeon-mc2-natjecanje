@@ -1,8 +1,8 @@
 import * as CodeMirror from 'codemirror';
 
 export class CodeBox {
-    constructor() {
-        const myTextarea = <HTMLElement> document.getElementById("console");
+    constructor(consoleId : string) {
+        const myTextarea = <HTMLElement> document.getElementById(consoleId);
         this.editor = CodeMirror(myTextarea, {
             lineNumbers: true,
             mode: 'javascript',

@@ -27,21 +27,37 @@ export class OgreBoss extends Boss {
 
         this.projectileTexture = ogreAttackTexture;
 
-        this.attackPower = 20;
+        this.attackPower = 30;
 
         this.projectiles = [];
     }
 
-    public override update(delta : number, player : Player, colliders : CollisionBox[]) : void {
+    public override update(delta : number, players : Player[], colliders : CollisionBox[]) : void {
         for (let i = 0; i < this.projectiles.length; i++) {
             let bullet = this.projectiles[i];
-            if (bullet.colBox.doesCollideWith(player.colBox) || colliders.forEach(e => e.doesCollideWith(bullet.colBox))) {
+            if (bullet.colBox.doesCollideWith(players[0].colBox)) {
                 bullet.play();
 
                 if (bullet.didAnimFinish()) {
                     this.projectiles[i].destroy();
                     this.projectiles.splice(i, 1);
-                    player.damage(this.attackPower);
+                    players[0].damage(this.attackPower);
+                }
+            } else if (bullet.colBox.doesCollideWith(players[1].colBox)) {
+                bullet.play();
+
+                if (bullet.didAnimFinish()) {
+                    this.projectiles[i].destroy();
+                    this.projectiles.splice(i, 1);
+                    players[1].damage(this.attackPower);
+                }
+            } else if (bullet.colBox.doesCollideWith(players[2].colBox)) {
+                bullet.play();
+
+                if (bullet.didAnimFinish()) {
+                    this.projectiles[i].destroy();
+                    this.projectiles.splice(i, 1);
+                    players[2].damage(this.attackPower);
                 }
             } else {
                 bullet.updatePos(delta);
@@ -99,7 +115,7 @@ export class OgreBoss extends Boss {
         velVector = velVector.normalize();
         velVector = velVector.multiplyVal(2);
         let bullet = new Bullet(this.projectileTexture, new Vector2f(this.position.x, this.position.y), 0.3, velVector);
-        renderer.renderContainer(bullet, "projectile");
+        renderer.render(bullet, "projectile");
         this.projectiles.push(bullet);
     }
 

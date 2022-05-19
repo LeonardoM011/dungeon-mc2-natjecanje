@@ -106,5 +106,4 @@ export class Tilemap {
     private allSprites : Sprite[][][];
     private spritesContainer : PIXI.Container;
     private currentPos : Vector2f;
-    //private mapFile : string;
 }

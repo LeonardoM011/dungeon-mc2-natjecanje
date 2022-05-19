@@ -2,6 +2,7 @@ import { Vector2f } from "../gameEngine/math/vector";
 import { CollisionBox } from "../gameEngine/objectManager/collisionBox";
 import { Renderer } from "../gameEngine/windowManager/renderer";
 import { Boss } from "../npcs/boss";
+import { HealerPlayer } from "../players/healerPlayer";
 import { Player } from "../players/player";
 
 /*function shootBullet() {
@@ -23,6 +24,7 @@ import { Player } from "../players/player";
 export type commandArgs = {
     renderer : Renderer,
     player : Player,
+    players : Player[],
     monster : Boss,
     colliders : CollisionBox[],
     args? : string[]
@@ -53,6 +55,36 @@ export let Commands : { [key: string]: Function } = {
             return -1;
 
         args.player.attack(args.renderer, args.monster);
+        return 0;
+    },
+    'IZLIJECI': (args : commandArgs) : number => {
+        if (!(args.args[0] === "MAGE" || args.args[0] === "MAGEA" || args.args[0] === "TANK" || args.args[0] === "TANKA"))
+            return -1;
+        
+        if (!(args.player instanceof HealerPlayer))
+            return -1;
+
+        if (args.args[0] === "MAGE" || args.args[0] === "MAGEA")
+            args.player.throwHeal(args.renderer, args.players[0]);
+
+        else if (args.args[0] === "TANK" || args.args[0] === "TANKA")
+            args.player.throwHeal(args.renderer, args.players[1]);
+        
+        return 0;
+    },
+    'IZLIJEČI': (args : commandArgs) : number => {
+        if (!(args.args[0] === "MAGE" || args.args[0] === "MAGEA" || args.args[0] === "TANK" || args.args[0] === "TANKA"))
+            return -1;
+        
+        if (typeof (args.player) != typeof(HealerPlayer))
+            return -1;
+
+        if (args.args[0] === "MAGE" || args.args[0] === "MAGEA")
+            args.player.throwHeal(args.renderer, args.players[0]);
+
+        else if (args.args[0] === "TANK" || args.args[0] === "TANKA")
+            args.player.throwHeal(args.renderer, args.players[1]);
+        
         return 0;
     },
     '': (args : commandArgs) : number => { return 0; },

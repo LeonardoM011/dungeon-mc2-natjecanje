@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>MC2 Natjecanje</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0 0;
@@ -16,21 +19,61 @@
             background-color: #22272E;
         }
         #compileButton {
-            margin: 5px 5px 0 5px;
+            margin: 5px 15px 0 5px;
             float: right;
             background-color: #22272E;
+            font-family: 'VT323', monospace;
+            font-size: 18px;
             color: rgb(3, 192, 3);
         }
-        #console {
+        .aboveConsole {
+            float: left;
+            width: 100%;
+            margin: 2.5px 0 0 0;
+            font-family: 'VT323', monospace;
+        }
+        .aboveClassDiv {
+            float: left;
+            margin: 0 10px;
+            width: calc(28.3% - 22.5px);
+        }
+        .classDiv {
+            border: solid 1px white;
+            box-shadow: 1px 1px white;
+            padding: 2.5px 2.5px 2.5px 2.5px;
+            margin: 2.5px 2.5px 2.5px 2.5px;
+            float: left;
+            background-color: #22272E;
+            color: rgb(255, 255, 255);
+        }
+        .console {
             float:left;
             resize: none;
             margin: 5px 10px;
             border: solid 1px white;
             border-radius: 2px;
             color: white;
-            height: calc(100% - 40px);
-            width: calc(100% - 20px);
+            height: calc(100% - 50px);
+            width: calc(28.3% - 22.5px);
             background-color: #22272E;
+        }
+        #commandList {
+            float:left;
+            resize: none;
+            margin: 5px 10px;
+            border: solid 1px white;
+            border-radius: 2px;
+            color: white;
+            height: calc(100% - 50px);
+            width: calc(15% - 22.5px);
+            background-color: #22272E;
+        }
+        #ulCommands {
+            list-style-type: none;
+            padding-left: 20px;
+            font-family: 'VT323', monospace;
+            font-size: 24px;
+            line-height: 1em;
         }
 
         /* REQUIRED FOR CODEMIRROR LINE HIGHLIGHTING */
@@ -47,8 +90,26 @@
 <body>
     <canvas id="mycanvas"></canvas>
     <div id="consoleDiv">
-        <button id="compileButton" type="button">Compile ></button>
-        <div id="console" ></div>
+        <div class="aboveConsole">
+            <button id="compileButton" type="button">Compile ></button>
+            <div class="aboveClassDiv"><div class="classDiv">Mage class</div></div>
+            <div class="aboveClassDiv"><div class="classDiv">Healer class</div></div>
+            <div class="aboveClassDiv"><div class="classDiv">Tank class</div></div>
+        </div>
+        <div class="console" id="consoleMage"></div>
+        <div class="console" id="consoleHealer"></div>
+        <div class="console" id="consoleTank"></div>
+        <div id="commandList">
+            <ul id="ulCommands">
+                <li>DESNO</li>
+                <li>LIJEVO</li>
+                <li>GORE</li>
+                <li>DOLJE</li>
+                <li>NAPADNI CUDOVISTE</li>
+                <li>IZLIJECI MAGEA</li>
+                <li>IZLIJECI TANKA</li>
+            </ul>
+        </div>
     </div>
     <script src="/js/index.js" type="application/javascript"></script>
 </body>

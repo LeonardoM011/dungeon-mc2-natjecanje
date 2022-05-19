@@ -57,6 +57,10 @@ export class Vector2f {
         return new Vector2f(this._x / this.length(), this._y / this.length());
     }
 
+    public distanceToVec(vec : Vector2f) : number {
+        return Math.sqrt(Math.pow(this._x - vec.x, 2) + Math.pow(this._y - vec.y, 2));
+    }
+
     /** Get first value of vector */
     get x() : number {
         return this._x;
