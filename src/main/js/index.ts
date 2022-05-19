@@ -159,7 +159,9 @@ async function interpretCommands() {
   let currentLine
   // TODO: RESET SCENE
   //mage.setPos(new Vector2f(renderer.width / 2, renderer.height / 2));
+  
   await sleep(1000);
+  
   for (let i = 0; i < Math.max(mageContents.length, healerContents.length, tankContents.length); i++) {
     
     if (i < mageContents.length) {
@@ -249,11 +251,15 @@ async function interpretCommands() {
     
 
     bossMove();
+    mage.replanishMana(10);
+    healer.replanishMana(10);
     await sleep(1000);
     consoleMage.unmarkLine(i);
     consoleHealer.unmarkLine(i);
     consoleTank.unmarkLine(i);
   }
+  await sleep(3000);
+  resetLevel();
 }
 
 async function errorLine(lineNum : number, consoleClass : CodeBox) {
@@ -293,4 +299,20 @@ function bossMove() : void {
     default:
       break;
   }
+}
+
+function resetLevel() : void {
+  mage.setPos = new Vector2f(centerX - 48, centerY + 60);
+  mage.setHealth = 100;
+  mage.setMana = 100;
+
+  healer.setPos = new Vector2f(centerX, centerY + 60);
+  healer.setHealth = 50;
+  healer.setMana = 100;
+
+  tank.setPos = new Vector2f(centerX + 48, centerY + 60);
+  tank.setHealth = 200;
+
+  ogreBoss.setPos = new Vector2f(centerX, centerY - 100);
+  ogreBoss.setHealth = 200;
 }

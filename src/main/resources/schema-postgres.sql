@@ -1,0 +1,10 @@
+DROP TABLE IF EXISTS users;
+CREATE TABLE IF NOT EXISTS users(
+    user_id SERIAL PRIMARY KEY NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    points INT,
+    last_login TIMESTAMP NOT NULL,
+    added_at TIMESTAMP NOT NULL
+);

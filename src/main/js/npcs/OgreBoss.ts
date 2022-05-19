@@ -12,11 +12,8 @@ export class OgreBoss extends Boss {
     constructor(textureIdle : Texture[], origin : Vector2f, textureRun : Texture[], ogreAttackTexture : Texture[]) {
         super(textureIdle, origin);
 
-        this.health = 100;
-        this.maxHealth = 100;
-        
-        this.hpBar = new HealthBar(new Vector2f(0, 22), 30, 4);
-        this.addChild(this.hpBar);
+        this.health = 200;
+        this.maxHealth = 200;
 
         this.isMoving = false;
         this.moveDirection = new Vector2f(0);
@@ -135,7 +132,7 @@ export class OgreBoss extends Boss {
         this.health = health;
     }
 
-    protected override hpBar : HealthBar;
+    
     protected override health: number;
     protected override maxHealth : number;
     protected isMoving : boolean;

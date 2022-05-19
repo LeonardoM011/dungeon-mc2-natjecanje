@@ -50,10 +50,11 @@ export class MagePlayer extends Player {
     }
 
     public replanishMana(val : number) : void {
-        if (this.mana >= this.maxMana) 
+        if (this.mana >= this.maxMana - val) 
             return;
 
         this.mana += val;
+        this.manaBar.setManaPercent(this.mana / this.maxMana);
     }
 
     public override attack(renderer : Renderer, boss : Boss) : void {
@@ -72,6 +73,11 @@ export class MagePlayer extends Player {
         this.projectiles.push(bullet);
 
         this.mana -= this.attackCost;
+        this.manaBar.setManaPercent(this.mana / this.maxMana);
+    }
+
+    set setMana(mana : number) {
+        this.mana = mana;
         this.manaBar.setManaPercent(this.mana / this.maxMana);
     }
 
