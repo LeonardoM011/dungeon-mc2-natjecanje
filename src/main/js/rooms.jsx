@@ -40,8 +40,7 @@ function Rooms() {
             </header>
             <div id={"wrapper"}>
                 <h1>Soba 1</h1>
-                <img src={"roomThumbnail.png"} width={450} height={300} onClick={event =>  window.location.href='/index'}>
-
+                <img src={"/src/roomThumbnail.png"} width={450} height={300} onClick={event =>  window.location.href='/index'}>
                 </img>
             </div>
         </>
