@@ -45,7 +45,6 @@ class HtmlController(private val repository: UserRepository) {
             .secure(true)
             .path("/")
             .maxAge(0)
-            .domain("localhost")
             .build()
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, resCookie.toString()).build();
