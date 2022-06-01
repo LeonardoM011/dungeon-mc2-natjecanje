@@ -32717,7 +32717,7 @@ function Rooms() {
   }, "Izlogiraj se")), /*#__PURE__*/React.createElement("div", {
     id: "wrapper"
   }, /*#__PURE__*/React.createElement("h1", null, "Soba 1"), /*#__PURE__*/React.createElement("img", {
-    src: "roomThumbnail.png",
+    src: "/src/roomThumbnail.png",
     width: 450,
     height: 300,
     onClick: function onClick(event) {
