@@ -50,7 +50,6 @@ class LoginController(private val repository: UserRepository) {
             .secure(true)
             .path("/")
             .maxAge((1 * 24 * 60 * 60).toLong())
-            .domain("localhost")
             .build()
 
         // Set user last login to now
@@ -93,7 +92,6 @@ class LoginController(private val repository: UserRepository) {
             .secure(true)
             .path("/")
             .maxAge((1 * 24 * 60 * 60).toLong())
-            .domain("localhost")
             .build()
 
 
